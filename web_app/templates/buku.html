@@ -1,0 +1,2315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donasi Buku Terdesentralisasi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #9b59b6;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            --gradient-accent: linear-gradient(135deg, #9b59b6 0%, #3498db 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: overlay;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+        }
+        
+        .navbar-brand i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .role-selector {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+        
+        .role-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .role-option.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(155, 89, 182, 0.25);
+        }
+        
+        .btn-login {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .dashboard-container {
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 25px;
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 90px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            padding: 0 20px;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-weight: 600;
+            padding: 1.5rem;
+            color: var(--text-dark);
+        }
+        
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        
+        .status-menunggu {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .status-sedang {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .status-selesai {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .donation-item {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .donation-item:hover {
+            border-color: var(--secondary-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .campaign-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            margin-bottom: 25px;
+            background: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .campaign-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .campaign-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .campaign-content {
+            padding: 20px;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .btn-custom {
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-custom-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .btn-custom-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .btn-custom-success {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn-custom-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .btn-custom-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-custom-warning:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .btn-custom-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-custom-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 25px;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .stats-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .agreement-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .agreement-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 20px;
+        }
+        
+        .agreement-content {
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        .agreement-signature {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .signature-line {
+            border-bottom: 1px solid #333;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1055;
+        }
+        
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .register-link {
+            cursor: pointer;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+        
+        .register-link:hover {
+            text-decoration: underline;
+        }
+        
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .register-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .register-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                height: auto;
+                margin-bottom: 20px;
+            }
+            
+            .dashboard-container {
+                padding-top: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div class="toast-container"></div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h2>Masuk ke Sistem Donasi Buku</h2>
+                <p class="text-muted">Pilih peran dan masukkan kredensial Anda</p>
+            </div>
+            
+            <div class="role-selector">
+                <div class="role-option active" data-role="donatur">Donatur</div>
+                <div class="role-option" data-role="kreator">Kreator</div>
+                <div class="role-option" data-role="admin">Admin</div>
+            </div>
+            
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Masukkan username" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Masukkan password" required>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Ingat saya</label>
+                </div>
+                
+                <button type="submit" class="btn-login" id="loginButton">
+                    <i class="fas fa-sign-in-alt me-2"></i>Masuk
+                </button>
+            </form>
+            
+            <div class="text-center mt-3">
+                <small class="text-muted">Belum punya akun? <span class="register-link" id="showRegister">Daftar di sini</span></small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="register-container hidden">
+        <div class="register-card">
+            <div class="register-header">
+                <div class="register-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2>Daftar Akun Baru</h2>
+                <p class="text-muted">Buat akun untuk mulai berdonasi buku</p>
+            </div>
+            
+            <form id="registerForm">
+                <div class="mb-3">
+                    <label for="registerRole" class="form-label">Daftar Sebagai</label>
+                    <select class="form-control" id="registerRole" required>
+                        <option value="">Pilih peran</option>
+                        <option value="donatur">Donatur</option>
+                        <option value="kreator">Kreator Kampanye</option>
+                    </select>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="registerNama" class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="registerNama" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="registerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="registerEmail" required>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="registerUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="registerUsername" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="registerTelepon" class="form-label">No. Telepon</label>
+                        <input type="text" class="form-control" id="registerTelepon" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="registerAlamat" class="form-label">Alamat</label>
+                    <textarea class="form-control" id="registerAlamat" rows="2" required></textarea>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="registerPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="registerPassword" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="registerConfirmPassword" class="form-label">Konfirmasi Password</label>
+                        <input type="password" class="form-control" id="registerConfirmPassword" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                    <label class="form-check-label" for="agreeTerms">Saya setuju dengan <a href="#">syarat dan ketentuan</a></label>
+                </div>
+                
+                <button type="submit" class="btn-login w-100" id="registerButton">
+                    <i class="fas fa-user-plus me-2"></i>Daftar
+                </button>
+            </form>
+            
+            <div class="text-center mt-3">
+                <small class="text-muted">Sudah punya akun? <span class="register-link" id="showLogin">Masuk di sini</span></small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Donatur -->
+    <div id="donaturDashboard" class="hidden">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-book-open"></i>Sistem Donasi Buku
+                </a>
+                <div class="navbar-nav ms-auto">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Donatur
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="logoutDonatur"><i class="fas fa-sign-out-alt me-2"></i>Keluar</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="dashboard-container">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <div class="col-lg-3">
+                        <div class="sidebar">
+                            <h4 class="mb-4">Menu Donatur</h4>
+                            <ul class="sidebar-menu">
+                                <li><a href="#" class="active" data-tab="dashboardDonatur"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li><a href="#" data-tab="buatJanjiDonasi"><i class="fas fa-handshake"></i> Buat Janji Donasi</a></li>
+                                <li><a href="#" data-tab="riwayatDonasi"><i class="fas fa-history"></i> Riwayat Donasi</a></li>
+                                <li><a href="#" data-tab="kampanyeDonasi"><i class="fas fa-bullhorn"></i> Kampanye Donasi</a></li>
+                                <li><a href="#" data-tab="profilDonatur"><i class="fas fa-user"></i> Profil Saya</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="col-lg-9">
+                        <div class="main-content">
+                            <!-- Dashboard Donatur -->
+                            <div id="dashboardDonatur" class="dashboard-tab">
+                                <h3 class="mb-4">Dashboard Donatur</h3>
+                                
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">12</span>
+                                            <span class="stats-label">Total Donasi</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">8</span>
+                                            <span class="stats-label">Selesai Disalurkan</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">3</span>
+                                            <span class="stats-label">Sedang Diproses</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">1</span>
+                                            <span class="stats-label">Menunggu Penjemputan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Donasi Terbaru</h5>
+                                    <div class="donation-item">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6>Donasi Buku Anak</h6>
+                                            <span class="status-badge status-selesai">Selesai Disalurkan</span>
+                                        </div>
+                                        <p class="mb-1"><strong>ID:</strong> D-2025-012</p>
+                                        <p class="mb-1"><strong>Jenis Buku:</strong> Buku Anak</p>
+                                        <p class="mb-1"><strong>Jumlah:</strong> 5 buku</p>
+                                        <p class="mb-1"><strong>Tanggal:</strong> 15 November 2025</p>
+                                        <div class="hash-display mt-2">
+                                            <strong>Hash Bukti:</strong> 0x1a2b3c4d5e6f7890abcdef1234567890abcdef1234567890abcdef1234567890ab
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="donation-item">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6>Donasi Buku Pelajaran</h6>
+                                            <span class="status-badge status-sedang">Sedang Disalurkan</span>
+                                        </div>
+                                        <p class="mb-1"><strong>ID:</strong> D-2025-013</p>
+                                        <p class="mb-1"><strong>Jenis Buku:</strong> Buku Pelajaran</p>
+                                        <p class="mb-1"><strong>Jumlah:</strong> 7 buku</p>
+                                        <p class="mb-1"><strong>Tanggal:</strong> 18 November 2025</p>
+                                        <div class="hash-display mt-2">
+                                            <strong>Hash Bukti:</strong> -
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Buat Janji Donasi -->
+                            <div id="buatJanjiDonasi" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Buat Janji Donasi</h3>
+                                
+                                <div class="agreement-section">
+                                    <div class="agreement-header">
+                                        <h4>PERJANJIAN DONASI BUKU</h4>
+                                        <p class="text-muted">Antara Pihak Pertama dan Pihak Kedua</p>
+                                    </div>
+                                    
+                                    <div class="agreement-content">
+                                        <p>Pada hari ini, <span id="agreementDate"></span>, bertempat di Sistem Donasi Buku Terdesentralisasi, telah dibuat Perjanjian Donasi Buku antara:</p>
+                                        
+                                        <p><strong>PIHAK PERTAMA (DONATUR)</strong></p>
+                                        <p>Nama: <span id="donaturName">[Nama Donatur]</span><br>
+                                        Alamat: <span id="donaturAddress">[Alamat Donatur]</span><br>
+                                        No. Telepon: <span id="donaturPhone">[No. Telepon Donatur]</span></p>
+                                        
+                                        <p><strong>PIHAK KEDUA (PENERIMA)</strong></p>
+                                        <p>Nama: <span id="penerimaName">[Nama Penerima]</span><br>
+                                        Alamat: <span id="penerimaAddress">[Alamat Penerima]</span><br>
+                                        No. Telepon: <span id="penerimaPhone">[No. Telepon Penerima]</span></p>
+                                        
+                                        <p>Kedua belah pihak sepakat untuk mengadakan perjanjian donasi buku dengan ketentuan sebagai berikut:</p>
+                                        
+                                        <h5>PASAL 1 - JENIS DAN JUMLAH BUKU</h5>
+                                        <p>Pihak Pertama bersedia mendonasikan buku-buku dengan rincian sebagai berikut:</p>
+                                        <div id="bookDetails">
+                                            <!-- Detail buku akan diisi melalui form -->
+                                        </div>
+                                        
+                                        <h5>PASAL 2 - PENYERAHAN BUKU</h5>
+                                        <p>Penyerahan buku akan dilakukan pada: <span id="deliveryDate">[Tanggal Penyerahan]</span></p>
+                                        <p>Lokasi penyerahan: <span id="deliveryLocation">[Lokasi Penyerahan]</span></p>
+                                        
+                                        <h5>PASAL 3 - KEWAJIBAN PIHAK PERTAMA</h5>
+                                        <p>Pihak Pertama berkewajiban untuk:</p>
+                                        <ul>
+                                            <li>Menyerahkan buku dalam kondisi layak baca</li>
+                                            <li>Menyampaikan informasi yang benar mengenai jenis dan jumlah buku</li>
+                                            <li>Bersedia untuk dihubungi oleh pihak sistem untuk koordinasi penyerahan</li>
+                                        </ul>
+                                        
+                                        <h5>PASAL 4 - KEWAJIBAN PIHAK KEDUA</h5>
+                                        <p>Pihak Kedua berkewajiban untuk:</p>
+                                        <ul>
+                                            <li>Menggunakan buku sesuai dengan peruntukannya</li>
+                                            <li>Memberikan konfirmasi penerimaan buku melalui sistem</li>
+                                            <li>Memberikan laporan penggunaan buku jika diminta</li>
+                                        </ul>
+                                        
+                                        <h5>PASAL 5 - LAIN-LAIN</h5>
+                                        <p>Perjanjian ini dibuat dalam dua rangkap, masing-masing mempunyai kekuatan hukum yang sama.</p>
+                                    </div>
+                                    
+                                    <div class="agreement-signature">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="text-center">PIHAK PERTAMA (DONATUR)</p>
+                                                <div class="signature-line"></div>
+                                                <p class="text-center mt-2">(<span id="signatureDonatur">[Nama Donatur]</span>)</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="text-center">PIHAK KEDUA (PENERIMA)</p>
+                                                <div class="signature-line"></div>
+                                                <p class="text-center mt-2">(<span id="signaturePenerima">[Nama Penerima]</span>)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Formulir Janji Donasi</h5>
+                                    <form id="janjiDonasiForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="namaDonaturForm" class="form-label">Nama Donatur</label>
+                                                <input type="text" class="form-control" id="namaDonaturForm" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="alamatDonaturForm" class="form-label">Alamat Donatur</label>
+                                                <input type="text" class="form-control" id="alamatDonaturForm" required>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="teleponDonaturForm" class="form-label">No. Telepon</label>
+                                                <input type="text" class="form-control" id="teleponDonaturForm" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="emailDonaturForm" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="emailDonaturForm" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="namaPenerimaForm" class="form-label">Nama Penerima Donasi</label>
+                                            <input type="text" class="form-control" id="namaPenerimaForm" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="alamatPenerimaForm" class="form-label">Alamat Penerima</label>
+                                            <textarea class="form-control" id="alamatPenerimaForm" rows="2" required></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="teleponPenerimaForm" class="form-label">No. Telepon Penerima</label>
+                                            <input type="text" class="form-control" id="teleponPenerimaForm" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Detail Buku yang Didonasikan</label>
+                                            <div id="bukuContainer">
+                                                <div class="buku-item mb-3 p-3 border rounded">
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <input type="text" class="form-control" placeholder="Judul Buku" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="text" class="form-control" placeholder="Jenis Buku" required>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input type="number" class="form-control" placeholder="Jumlah" min="1" required>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button type="button" class="btn btn-danger btn-sm w-100 hapus-buku">Hapus</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-outline-primary btn-sm" id="tambahBuku">+ Tambah Buku</button>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="tanggalPenyerahanForm" class="form-label">Tanggal Penyerahan</label>
+                                                <input type="date" class="form-control" id="tanggalPenyerahanForm" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="lokasiPenyerahanForm" class="form-label">Lokasi Penyerahan</label>
+                                                <input type="text" class="form-control" id="lokasiPenyerahanForm" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="setujuSyarat" required>
+                                            <label class="form-check-label" for="setujuSyarat">Saya setuju dengan semua syarat dan ketentuan yang berlaku</label>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-custom btn-custom-primary w-100 py-2">
+                                            <i class="fas fa-file-contract me-2"></i>Buat Janji Donasi
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Riwayat Donasi -->
+                            <div id="riwayatDonasi" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Riwayat Donasi</h3>
+                                
+                                <div class="dashboard-card">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID Donasi</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Jenis Buku</th>
+                                                    <th>Jumlah</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>D-2025-012</td>
+                                                    <td>15 Nov 2025</td>
+                                                    <td>Buku Anak</td>
+                                                    <td>5</td>
+                                                    <td><span class="status-badge status-selesai">Selesai</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary">Detail</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>D-2025-013</td>
+                                                    <td>18 Nov 2025</td>
+                                                    <td>Buku Pelajaran</td>
+                                                    <td>7</td>
+                                                    <td><span class="status-badge status-sedang">Diproses</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary">Detail</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>D-2025-014</td>
+                                                    <td>20 Nov 2025</td>
+                                                    <td>Novel</td>
+                                                    <td>3</td>
+                                                    <td><span class="status-badge status-menunggu">Menunggu</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary">Detail</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kampanye Donasi -->
+                            <div id="kampanyeDonasi" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Kampanye Donasi Buku</h3>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="campaign-card">
+                                            <div class="campaign-image" style="background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')"></div>
+                                            <div class="campaign-content">
+                                                <h5>Buku untuk Anak Pedalaman</h5>
+                                                <p class="text-muted">Membantu anak-anak di daerah pedalaman mendapatkan akses pendidikan yang layak melalui buku.</p>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-3">
+                                                    <span>750 buku terkumpul</span>
+                                                    <span>75%</span>
+                                                </div>
+                                                <button class="btn btn-custom btn-custom-primary w-100" onclick="navigateToBuatJanjiDonasi()">Donasi Sekarang</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="campaign-card">
+                                            <div class="campaign-image" style="background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')"></div>
+                                            <div class="campaign-content">
+                                                <h5>Perpustakaan Keliling</h5>
+                                                <p class="text-muted">Mendukung program perpustakaan keliling untuk menjangkau daerah-daerah terpencil.</p>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 45%"></div>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-3">
+                                                    <span>450 buku terkumpul</span>
+                                                    <span>45%</span>
+                                                </div>
+                                                <button class="btn btn-custom btn-custom-primary w-100" onclick="navigateToBuatJanjiDonasi()">Donasi Sekarang</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profil Donatur -->
+                            <div id="profilDonatur" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Profil Saya</h3>
+                                
+                                <div class="dashboard-card">
+                                    <form id="profilForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="profilNama" class="form-label">Nama Lengkap</label>
+                                                <input type="text" class="form-control" id="profilNama" value="Ahmad Fauzi">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="profilEmail" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="profilEmail" value="ahmad@email.com">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="profilTelepon" class="form-label">No. Telepon</label>
+                                                <input type="text" class="form-control" id="profilTelepon" value="08123456789">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="profilAlamat" class="form-label">Alamat</label>
+                                                <input type="text" class="form-control" id="profilAlamat" value="Jl. Merdeka No. 123, Jakarta">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="profilTentang" class="form-label">Tentang Saya</label>
+                                            <textarea class="form-control" id="profilTentang" rows="3">Saya adalah seorang donatur yang peduli dengan pendidikan anak-anak Indonesia.</textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-custom btn-custom-primary">Simpan Perubahan</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Kreator -->
+    <div id="kreatorDashboard" class="hidden">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-book-open"></i>Sistem Donasi Buku
+                </a>
+                <div class="navbar-nav ms-auto">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Kreator
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="logoutKreator"><i class="fas fa-sign-out-alt me-2"></i>Keluar</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="dashboard-container">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Sidebar Kreator -->
+                    <div class="col-lg-3">
+                        <div class="sidebar">
+                            <h4 class="mb-4">Menu Kreator</h4>
+                            <ul class="sidebar-menu">
+                                <li><a href="#" class="active" data-tab="dashboardKreator"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li><a href="#" data-tab="kampanyeKreator"><i class="fas fa-bullhorn"></i> Kelola Kampanye</a></li>
+                                <li><a href="#" data-tab="verifikasiPenjemputan"><i class="fas fa-check-circle"></i> Verifikasi Penjemputan</a></li>
+                                <li><a href="#" data-tab="laporanKreator"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                                <li><a href="#" data-tab="profilKreator"><i class="fas fa-user"></i> Profil Saya</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Main Content Kreator -->
+                    <div class="col-lg-9">
+                        <div class="main-content">
+                            <!-- Dashboard Kreator -->
+                            <div id="dashboardKreator" class="dashboard-tab">
+                                <h3 class="mb-4">Dashboard Kreator</h3>
+                                
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">5</span>
+                                            <span class="stats-label">Kampanye Aktif</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">127</span>
+                                            <span class="stats-label">Donasi Diverifikasi</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">1,250</span>
+                                            <span class="stats-label">Buku Terkumpul</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">45</span>
+                                            <span class="stats-label">Komunitas Terjangkau</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Kampanye Terbaru</h5>
+                                    <div class="campaign-card">
+                                        <div class="campaign-image" style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')"></div>
+                                        <div class="campaign-content">
+                                            <h5>Buku untuk Pendidikan Anak Marjinal</h5>
+                                            <p class="text-muted">Kampanye ini bertujuan untuk memberikan akses buku bacaan berkualitas bagi anak-anak dari keluarga marjinal di perkotaan.</p>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <span>650 buku terkumpul</span>
+                                                <span>65%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <button class="btn btn-custom btn-custom-primary">Kelola Kampanye</button>
+                                                <button class="btn btn-custom btn-custom-warning">Lihat Laporan</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kelola Kampanye Kreator -->
+                            <div id="kampanyeKreator" class="dashboard-tab hidden">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h3>Kelola Kampanye</h3>
+                                    <button class="btn btn-custom btn-custom-primary" data-bs-toggle="modal" data-bs-target="#tambahKampanyeModal">
+                                        <i class="fas fa-plus me-2"></i>Tambah Kampanye
+                                    </button>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="campaign-card">
+                                            <div class="campaign-image" style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')"></div>
+                                            <div class="campaign-content">
+                                                <h5>Buku untuk Pendidikan Anak Marjinal</h5>
+                                                <p class="text-muted">Target: 1,000 buku</p>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-3">
+                                                    <span>650 buku terkumpul</span>
+                                                    <span>65%</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <button class="btn btn-custom btn-custom-primary btn-sm">Edit</button>
+                                                    <button class="btn btn-custom btn-custom-warning btn-sm">Lihat Donasi</button>
+                                                    <button class="btn btn-custom btn-custom-danger btn-sm">Hapus</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="campaign-card">
+                                            <div class="campaign-image" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')"></div>
+                                            <div class="campaign-content">
+                                                <h5>Perpustakaan Desa Terpencil</h5>
+                                                <p class="text-muted">Target: 2,000 buku</p>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 30%"></div>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-3">
+                                                    <span>600 buku terkumpul</span>
+                                                    <span>30%</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <button class="btn btn-custom btn-custom-primary btn-sm">Edit</button>
+                                                    <button class="btn btn-custom btn-custom-warning btn-sm">Lihat Donasi</button>
+                                                    <button class="btn btn-custom btn-custom-danger btn-sm">Hapus</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Verifikasi Penjemputan Kreator -->
+                            <div id="verifikasiPenjemputan" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Verifikasi Penjemputan</h3>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Daftar Donasi Menunggu Penjemputan</h5>
+                                    
+                                    <div class="donation-item">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6>Donasi Buku Pelajaran</h6>
+                                            <span class="status-badge status-menunggu">Menunggu Penjemputan</span>
+                                        </div>
+                                        <p class="mb-1"><strong>ID:</strong> D-2025-014</p>
+                                        <p class="mb-1"><strong>Donatur:</strong> Budi Santoso</p>
+                                        <p class="mb-1"><strong>Jenis Buku:</strong> Buku Pelajaran</p>
+                                        <p class="mb-1"><strong>Jumlah:</strong> 7 buku</p>
+                                        <p class="mb-1"><strong>Alamat Penjemputan:</strong> Jl. Gatot Subroto No. 78, Surabaya</p>
+                                        <p class="mb-1"><strong>Kontak:</strong> budi@email.com</p>
+                                        <div class="mt-3">
+                                            <button class="btn btn-custom btn-custom-warning me-2">Verifikasi Penjemputan</button>
+                                            <button class="btn btn-outline-secondary">Detail</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="donation-item">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6>Donasi Novel</h6>
+                                            <span class="status-badge status-menunggu">Menunggu Penjemputan</span>
+                                        </div>
+                                        <p class="mb-1"><strong>ID:</strong> D-2025-015</p>
+                                        <p class="mb-1"><strong>Donatur:</strong> Sari Indah</p>
+                                        <p class="mb-1"><strong>Jenis Buku:</strong> Novel</p>
+                                        <p class="mb-1"><strong>Jumlah:</strong> 5 buku</p>
+                                        <p class="mb-1"><strong>Alamat Penjemputan:</strong> Jl. Sudirman No. 45, Bandung</p>
+                                        <p class="mb-1"><strong>Kontak:</strong> sari@email.com</p>
+                                        <div class="mt-3">
+                                            <button class="btn btn-custom btn-custom-warning me-2">Verifikasi Penjemputan</button>
+                                            <button class="btn btn-outline-secondary">Detail</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Laporan Kreator -->
+                            <div id="laporanKreator" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Laporan Kampanye</h3>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Statistik Kampanye</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <canvas id="kampanyeChart" height="250"></canvas>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <canvas id="jenisBukuChart" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Daftar Donasi Terbaru</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID Donasi</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Donatur</th>
+                                                    <th>Jenis Buku</th>
+                                                    <th>Jumlah</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>D-2025-014</td>
+                                                    <td>20 Nov 2025</td>
+                                                    <td>Budi Santoso</td>
+                                                    <td>Buku Pelajaran</td>
+                                                    <td>7</td>
+                                                    <td><span class="status-badge status-menunggu">Menunggu</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>D-2025-013</td>
+                                                    <td>18 Nov 2025</td>
+                                                    <td>Sari Indah</td>
+                                                    <td>Novel</td>
+                                                    <td>5</td>
+                                                    <td><span class="status-badge status-sedang">Diproses</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>D-2025-012</td>
+                                                    <td>15 Nov 2025</td>
+                                                    <td>Ahmad Fauzi</td>
+                                                    <td>Buku Anak</td>
+                                                    <td>5</td>
+                                                    <td><span class="status-badge status-selesai">Selesai</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profil Kreator -->
+                            <div id="profilKreator" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Profil Kreator</h3>
+                                
+                                <div class="dashboard-card">
+                                    <form id="profilKreatorForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="kreatorNama" class="form-label">Nama Lengkap</label>
+                                                <input type="text" class="form-control" id="kreatorNama" value="Dewi Lestari">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="kreatorEmail" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="kreatorEmail" value="dewi@email.com">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="kreatorTelepon" class="form-label">No. Telepon</label>
+                                                <input type="text" class="form-control" id="kreatorTelepon" value="08123456789">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="kreatorOrganisasi" class="form-label">Organisasi</label>
+                                                <input type="text" class="form-control" id="kreatorOrganisasi" value="Komunitas Baca Indonesia">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="kreatorTentang" class="form-label">Tentang Saya</label>
+                                            <textarea class="form-control" id="kreatorTentang" rows="3">Saya adalah koordinator kampanye donasi buku yang berfokus pada peningkatan literasi anak-anak Indonesia.</textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-custom btn-custom-primary">Simpan Perubahan</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Admin -->
+    <div id="adminDashboard" class="hidden">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-book-open"></i>Sistem Donasi Buku
+                </a>
+                <div class="navbar-nav ms-auto">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="logoutAdmin"><i class="fas fa-sign-out-alt me-2"></i>Keluar</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="dashboard-container">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Sidebar Admin -->
+                    <div class="col-lg-3">
+                        <div class="sidebar">
+                            <h4 class="mb-4">Menu Admin</h4>
+                            <ul class="sidebar-menu">
+                                <li><a href="#" class="active" data-tab="dashboardAdmin"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li><a href="#" data-tab="kelolaDonasi"><i class="fas fa-hand-holding-heart"></i> Kelola Donasi</a></li>
+                                <li><a href="#" data-tab="kelolaUser"><i class="fas fa-users"></i> Kelola Pengguna</a></li>
+                                <li><a href="#" data-tab="finalisasiPenyaluran"><i class="fas fa-file-contract"></i> Finalisasi Penyaluran</a></li>
+                                <li><a href="#" data-tab="laporanAdmin"><i class="fas fa-chart-pie"></i> Laporan Sistem</a></li>
+                                <li><a href="#" data-tab="pengaturanAdmin"><i class="fas fa-cog"></i> Pengaturan</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Main Content Admin -->
+                    <div class="col-lg-9">
+                        <div class="main-content">
+                            <!-- Dashboard Admin -->
+                            <div id="dashboardAdmin" class="dashboard-tab">
+                                <h3 class="mb-4">Dashboard Admin</h3>
+                                
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">1,250</span>
+                                            <span class="stats-label">Total Buku Didonasikan</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">350</span>
+                                            <span class="stats-label">Donatur Terdaftar</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">45</span>
+                                            <span class="stats-label">Kreator Aktif</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <span class="stats-number">98%</span>
+                                            <span class="stats-label">Tingkat Keberhasilan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Aktivitas Terbaru</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Waktu</th>
+                                                    <th>Aktivitas</th>
+                                                    <th>Pengguna</th>
+                                                    <th>Detail</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>20 Nov 2025, 14:30</td>
+                                                    <td>Donasi Baru</td>
+                                                    <td>Budi Santoso</td>
+                                                    <td>7 buku pelajaran</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>20 Nov 2025, 13:15</td>
+                                                    <td>Verifikasi Penjemputan</td>
+                                                    <td>Kreator - Dewi Lestari</td>
+                                                    <td>ID: D-2025-013</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>20 Nov 2025, 11:45</td>
+                                                    <td>Finalisasi Penyaluran</td>
+                                                    <td>Admin</td>
+                                                    <td>ID: D-2025-012</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>19 Nov 2025, 16:20</td>
+                                                    <td>Pendaftaran Pengguna Baru</td>
+                                                    <td>Sari Indah</td>
+                                                    <td>Donatur</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kelola Donasi Admin -->
+                            <div id="kelolaDonasi" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Kelola Donasi</h3>
+                                
+                                <div class="dashboard-card">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID Donasi</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Donatur</th>
+                                                    <th>Jenis Buku</th>
+                                                    <th>Jumlah</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>D-2025-014</td>
+                                                    <td>20 Nov 2025</td>
+                                                    <td>Budi Santoso</td>
+                                                    <td>Buku Pelajaran</td>
+                                                    <td>7</td>
+                                                    <td><span class="status-badge status-menunggu">Menunggu</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary me-1">Detail</button>
+                                                        <button class="btn btn-sm btn-outline-warning">Edit</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>D-2025-013</td>
+                                                    <td>18 Nov 2025</td>
+                                                    <td>Sari Indah</td>
+                                                    <td>Novel</td>
+                                                    <td>5</td>
+                                                    <td><span class="status-badge status-sedang">Diproses</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary me-1">Detail</button>
+                                                        <button class="btn btn-sm btn-outline-warning">Edit</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>D-2025-012</td>
+                                                    <td>15 Nov 2025</td>
+                                                    <td>Ahmad Fauzi</td>
+                                                    <td>Buku Anak</td>
+                                                    <td>5</td>
+                                                    <td><span class="status-badge status-selesai">Selesai</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary me-1">Detail</button>
+                                                        <button class="btn btn-sm btn-outline-warning">Edit</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kelola User Admin -->
+                            <div id="kelolaUser" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Kelola Pengguna</h3>
+                                
+                                <div class="dashboard-card">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Nama</th>
+                                                    <th>Email</th>
+                                                    <th>Peran</th>
+                                                    <th>Tanggal Daftar</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>U-001</td>
+                                                    <td>Ahmad Fauzi</td>
+                                                    <td>ahmad@email.com</td>
+                                                    <td>Donatur</td>
+                                                    <td>10 Nov 2025</td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
+                                                        <button class="btn btn-sm btn-outline-danger">Nonaktifkan</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>U-002</td>
+                                                    <td>Dewi Lestari</td>
+                                                    <td>dewi@email.com</td>
+                                                    <td>Kreator</td>
+                                                    <td>12 Nov 2025</td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
+                                                        <button class="btn btn-sm btn-outline-danger">Nonaktifkan</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>U-003</td>
+                                                    <td>Budi Santoso</td>
+                                                    <td>budi@email.com</td>
+                                                    <td>Donatur</td>
+                                                    <td>15 Nov 2025</td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
+                                                        <button class="btn btn-sm btn-outline-danger">Nonaktifkan</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Finalisasi Penyaluran Admin -->
+                            <div id="finalisasiPenyaluran" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Finalisasi Penyaluran</h3>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Daftar Donasi Siap Difinalisasi</h5>
+                                    
+                                    <div class="donation-item">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6>Donasi Buku Pelajaran</h6>
+                                            <span class="status-badge status-sedang">Siap Difinalisasi</span>
+                                        </div>
+                                        <p class="mb-1"><strong>ID:</strong> D-2025-013</p>
+                                        <p class="mb-1"><strong>Donatur:</strong> Sari Indah</p>
+                                        <p class="mb-1"><strong>Jenis Buku:</strong> Novel</p>
+                                        <p class="mb-1"><strong>Jumlah:</strong> 5 buku</p>
+                                        <p class="mb-1"><strong>Penerima:</strong> Panti Asuhan Kasih Bunda</p>
+                                        <p class="mb-1"><strong>Tanggal Penyaluran:</strong> 22 November 2025</p>
+                                        <div class="mt-3">
+                                            <button class="btn btn-custom btn-custom-danger me-2">Finalisasi Penyaluran</button>
+                                            <button class="btn btn-outline-secondary">Detail</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Form Finalisasi Penyaluran</h5>
+                                    <form id="finalisasiForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="finalIdDonasi" class="form-label">ID Donasi</label>
+                                                <input type="text" class="form-control" id="finalIdDonasi" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="finalTanggal" class="form-label">Tanggal Penyaluran</label>
+                                                <input type="date" class="form-control" id="finalTanggal" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="finalPenerima" class="form-label">Penerima Donasi</label>
+                                            <input type="text" class="form-control" id="finalPenerima" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="finalHash" class="form-label">Hash Bukti Penyaluran</label>
+                                            <input type="text" class="form-control" id="finalHash" placeholder="0x1a2b3c4d5e6f7890abcdef..." required>
+                                            <div class="form-text">Hash ini akan dicatat secara permanen di blockchain.</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="finalKeterangan" class="form-label">Keterangan</label>
+                                            <textarea class="form-control" id="finalKeterangan" rows="3"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-custom btn-custom-danger w-100 py-2">
+                                            <i class="fas fa-file-contract me-2"></i>Finalisasi Penyaluran
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Laporan Admin -->
+                            <div id="laporanAdmin" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Laporan Sistem</h3>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Statistik Sistem</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <canvas id="statistikDonasiChart" height="250"></canvas>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <canvas id="statistikUserChart" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Ekspor Laporan</h5>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card text-center p-3">
+                                                <i class="fas fa-file-excel fa-3x text-success mb-3"></i>
+                                                <h5>Laporan Donasi</h5>
+                                                <p class="text-muted">Ekspor data donasi dalam format Excel</p>
+                                                <button class="btn btn-custom btn-custom-success">Ekspor</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card text-center p-3">
+                                                <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                                                <h5>Laporan Pengguna</h5>
+                                                <p class="text-muted">Ekspor data pengguna dalam format PDF</p>
+                                                <button class="btn btn-custom btn-custom-danger">Ekspor</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card text-center p-3">
+                                                <i class="fas fa-chart-bar fa-3x text-primary mb-3"></i>
+                                                <h5>Laporan Keuangan</h5>
+                                                <p class="text-muted">Ekspor laporan keuangan sistem</p>
+                                                <button class="btn btn-custom btn-custom-primary">Ekspor</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pengaturan Admin -->
+                            <div id="pengaturanAdmin" class="dashboard-tab hidden">
+                                <h3 class="mb-4">Pengaturan Sistem</h3>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Pengaturan Umum</h5>
+                                    <form id="pengaturanForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="namaSistem" class="form-label">Nama Sistem</label>
+                                                <input type="text" class="form-control" id="namaSistem" value="Sistem Donasi Buku Terdesentralisasi">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="emailSistem" class="form-label">Email Sistem</label>
+                                                <input type="email" class="form-control" id="emailSistem" value="admin@donasibuku.id">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="deskripsiSistem" class="form-label">Deskripsi Sistem</label>
+                                            <textarea class="form-control" id="deskripsiSistem" rows="3">Platform donasi buku terdesentralisasi berbasis blockchain untuk transparansi penyaluran pustaka.</textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="blockchainNetwork" class="form-label">Jaringan Blockchain</label>
+                                            <select class="form-control" id="blockchainNetwork">
+                                                <option value="ganache">Ganache (Development)</option>
+                                                <option value="ropsten">Ropsten (Testnet)</option>
+                                                <option value="mainnet">Ethereum Mainnet</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-custom btn-custom-primary">Simpan Pengaturan</button>
+                                    </form>
+                                </div>
+                                
+                                <div class="dashboard-card">
+                                    <h5 class="mb-4">Koneksi Blockchain</h5>
+                                    <div class="alert alert-info">
+                                        <h6><i class="fas fa-info-circle me-2"></i>Status Koneksi</h6>
+                                        <p class="mb-0">Sistem terhubung ke jaringan <strong>Ganache</strong>. Smart Contract: <code>0x1a2b3c4d5e6f7890abcdef1234567890abcdef123</code></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-custom btn-custom-warning">Test Koneksi</button>
+                                        <button class="btn btn-custom btn-custom-danger">Putuskan Koneksi</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Kampanye -->
+    <div class="modal fade" id="tambahKampanyeModal" tabindex="-1" aria-labelledby="tambahKampanyeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tambahKampanyeModalLabel">Tambah Kampanye Donasi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="tambahKampanyeForm">
+                        <div class="mb-3">
+                            <label for="judulKampanye" class="form-label">Judul Kampanye</label>
+                            <input type="text" class="form-control" id="judulKampanye" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deskripsiKampanye" class="form-label">Deskripsi Kampanye</label>
+                            <textarea class="form-control" id="deskripsiKampanye" rows="3" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="targetKampanye" class="form-label">Target Buku</label>
+                                <input type="number" class="form-control" id="targetKampanye" min="1" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="deadlineKampanye" class="form-label">Batas Waktu</label>
+                                <input type="date" class="form-control" id="deadlineKampanye" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gambarKampanye" class="form-label">Gambar Kampanye</label>
+                            <input type="file" class="form-control" id="gambarKampanye" accept="image/*">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="setujuKampanye" required>
+                            <label class="form-check-label" for="setujuKampanye">Saya setuju dengan ketentuan kampanye donasi</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-custom btn-custom-primary">Simpan Kampanye</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data simulasi untuk sistem
+        let currentUser = null;
+        let currentRole = null;
+        
+        // Inisialisasi tanggal perjanjian
+        document.getElementById('agreementDate').textContent = new Date().toLocaleDateString('id-ID', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        // Fungsi untuk menampilkan toast notification
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            
+            const toastHTML = `
+                <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+            toast.show();
+            
+            // Hapus elemen dari DOM setelah toast hilang
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                toastElement.remove();
+            });
+        }
+        
+        // Fungsi untuk menampilkan loading state pada tombol
+        function setButtonLoading(button, isLoading) {
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Memproses...';
+            } else {
+                button.disabled = false;
+                // Kembalikan teks asli tombol
+                const originalText = button.getAttribute('data-original-text');
+                if (originalText) {
+                    button.innerHTML = originalText;
+                }
+            }
+        }
+        
+        // ===== NAVIGASI ANTAR HALAMAN =====
+        
+        // Tampilkan halaman register
+        document.getElementById('showRegister').addEventListener('click', function() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('registerPage').classList.remove('hidden');
+        });
+        
+        // Tampilkan halaman login
+        document.getElementById('showLogin').addEventListener('click', function() {
+            document.getElementById('registerPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        });
+        
+        // Navigasi ke halaman Buat Janji Donasi dari tombol Donasi Sekarang
+        function navigateToBuatJanjiDonasi() {
+            // Jika user belum login, arahkan ke login
+            if (!currentUser) {
+                document.getElementById('donaturDashboard').classList.add('hidden');
+                document.getElementById('kreatorDashboard').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.add('hidden');
+                document.getElementById('loginPage').classList.remove('hidden');
+                showToast('Silakan login terlebih dahulu untuk melakukan donasi', 'warning');
+                return;
+            }
+            
+            // Jika user sudah login sebagai donatur, arahkan ke halaman Buat Janji Donasi
+            if (currentRole === 'donatur') {
+                // Sembunyikan semua tab
+                const allTabs = document.querySelectorAll('.dashboard-tab');
+                allTabs.forEach(tab => {
+                    tab.classList.add('hidden');
+                });
+                
+                // Hapus kelas active dari semua menu
+                const allMenuItems = document.querySelectorAll('.sidebar-menu a');
+                allMenuItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Tampilkan tab Buat Janji Donasi dan aktifkan menu
+                document.getElementById('buatJanjiDonasi').classList.remove('hidden');
+                document.querySelector('[data-tab="buatJanjiDonasi"]').classList.add('active');
+                
+                showToast('Silakan isi formulir janji donasi', 'info');
+            } else {
+                showToast('Hanya donatur yang dapat melakukan donasi buku', 'warning');
+            }
+        }
+        
+        // ===== LOGIN FUNCTIONALITY =====
+        
+        // Role selector
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.role-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const selectedRole = document.querySelector('.role-option.active').getAttribute('data-role');
+            const loginButton = document.getElementById('loginButton');
+            
+            // Simpan teks asli tombol
+            if (!loginButton.getAttribute('data-original-text')) {
+                loginButton.setAttribute('data-original-text', loginButton.innerHTML);
+            }
+            
+            setButtonLoading(loginButton, true);
+            
+            // Simulasi proses login
+            setTimeout(() => {
+                // Validasi kredensial (dalam implementasi nyata, ini akan memeriksa database)
+                if (username && password) {
+                    currentUser = {
+                        username: username,
+                        role: selectedRole
+                    };
+                    currentRole = selectedRole;
+                    
+                    // Tampilkan dashboard sesuai role
+                    document.getElementById('loginPage').classList.add('hidden');
+                    document.getElementById('registerPage').classList.add('hidden');
+                    
+                    if (selectedRole === 'donatur') {
+                        document.getElementById('donaturDashboard').classList.remove('hidden');
+                        showToast('Berhasil masuk sebagai Donatur!', 'success');
+                    } else if (selectedRole === 'kreator') {
+                        document.getElementById('kreatorDashboard').classList.remove('hidden');
+                        showToast('Berhasil masuk sebagai Kreator!', 'success');
+                        initializeKreatorCharts();
+                    } else if (selectedRole === 'admin') {
+                        document.getElementById('adminDashboard').classList.remove('hidden');
+                        showToast('Berhasil masuk sebagai Admin!', 'success');
+                        initializeAdminCharts();
+                    }
+                } else {
+                    showToast('Username dan password harus diisi!', 'warning');
+                }
+                
+                setButtonLoading(loginButton, false);
+            }, 1500);
+        });
+        
+        // Register form
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const registerButton = document.getElementById('registerButton');
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            // Simpan teks asli tombol
+            if (!registerButton.getAttribute('data-original-text')) {
+                registerButton.setAttribute('data-original-text', registerButton.innerHTML);
+            }
+            
+            // Validasi password
+            if (password !== confirmPassword) {
+                showToast('Password dan konfirmasi password tidak cocok!', 'warning');
+                return;
+            }
+            
+            setButtonLoading(registerButton, true);
+            
+            // Simulasi proses pendaftaran
+            setTimeout(() => {
+                showToast('Pendaftaran berhasil! Silakan login dengan akun Anda.', 'success');
+                
+                // Reset form
+                this.reset();
+                
+                // Kembali ke halaman login
+                document.getElementById('registerPage').classList.add('hidden');
+                document.getElementById('loginPage').classList.remove('hidden');
+                
+                setButtonLoading(registerButton, false);
+            }, 2000);
+        });
+        
+        // Logout functionality
+        document.getElementById('logoutDonatur').addEventListener('click', function() {
+            document.getElementById('donaturDashboard').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            showToast('Anda telah keluar dari sistem', 'info');
+        });
+        
+        document.getElementById('logoutKreator').addEventListener('click', function() {
+            document.getElementById('kreatorDashboard').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            showToast('Anda telah keluar dari sistem', 'info');
+        });
+        
+        document.getElementById('logoutAdmin').addEventListener('click', function() {
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            showToast('Anda telah keluar dari sistem', 'info');
+        });
+        
+        // ===== DASHBOARD NAVIGATION =====
+        
+        // Fungsi untuk menangani navigasi tab
+        function setupTabNavigation(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' && e.target.getAttribute('data-tab')) {
+                    e.preventDefault();
+                    
+                    // Sembunyikan semua tab
+                    const allTabs = container.querySelectorAll('.dashboard-tab');
+                    allTabs.forEach(tab => {
+                        tab.classList.add('hidden');
+                    });
+                    
+                    // Hapus kelas active dari semua menu
+                    const allMenuItems = container.querySelectorAll('.sidebar-menu a');
+                    allMenuItems.forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Tampilkan tab yang dipilih dan aktifkan menu
+                    const tabId = e.target.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.remove('hidden');
+                    e.target.classList.add('active');
+                }
+            });
+        }
+        
+        // Setup tab navigation untuk setiap dashboard
+        setupTabNavigation('donaturDashboard');
+        setupTabNavigation('kreatorDashboard');
+        setupTabNavigation('adminDashboard');
+        
+        // ===== DONATUR FUNCTIONALITY =====
+        
+        // Tambah buku dalam form janji donasi
+        document.getElementById('tambahBuku').addEventListener('click', function() {
+            const bukuContainer = document.getElementById('bukuContainer');
+            const bukuItem = document.createElement('div');
+            bukuItem.className = 'buku-item mb-3 p-3 border rounded';
+            bukuItem.innerHTML = `
+                <div class="row">
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" placeholder="Judul Buku" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" placeholder="Jenis Buku" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="Jumlah" min="1" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger btn-sm w-100 hapus-buku">Hapus</button>
+                    </div>
+                </div>
+            `;
+            bukuContainer.appendChild(bukuItem);
+            
+            // Tambah event listener untuk tombol hapus
+            bukuItem.querySelector('.hapus-buku').addEventListener('click', function() {
+                bukuItem.remove();
+            });
+        });
+        
+        // Form janji donasi
+        document.getElementById('janjiDonasiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            // Simpan teks asli tombol
+            if (!submitButton.getAttribute('data-original-text')) {
+                submitButton.setAttribute('data-original-text', submitButton.innerHTML);
+            }
+            
+            setButtonLoading(submitButton, true);
+            
+            // Simulasi proses pembuatan janji donasi
+            setTimeout(() => {
+                // Update data perjanjian dengan nilai dari form
+                document.getElementById('donaturName').textContent = document.getElementById('namaDonaturForm').value;
+                document.getElementById('donaturAddress').textContent = document.getElementById('alamatDonaturForm').value;
+                document.getElementById('donaturPhone').textContent = document.getElementById('teleponDonaturForm').value;
+                document.getElementById('penerimaName').textContent = document.getElementById('namaPenerimaForm').value;
+                document.getElementById('penerimaAddress').textContent = document.getElementById('alamatPenerimaForm').value;
+                document.getElementById('penerimaPhone').textContent = document.getElementById('teleponPenerimaForm').value;
+                document.getElementById('deliveryDate').textContent = document.getElementById('tanggalPenyerahanForm').value;
+                document.getElementById('deliveryLocation').textContent = document.getElementById('lokasiPenyerahanForm').value;
+                document.getElementById('signatureDonatur').textContent = document.getElementById('namaDonaturForm').value;
+                document.getElementById('signaturePenerima').textContent = document.getElementById('namaPenerimaForm').value;
+                
+                // Update detail buku
+                const bukuDetails = document.getElementById('bookDetails');
+                bukuDetails.innerHTML = '';
+                
+                const bukuItems = document.querySelectorAll('.buku-item');
+                bukuItems.forEach(item => {
+                    const judul = item.querySelector('input[placeholder="Judul Buku"]').value;
+                    const jenis = item.querySelector('input[placeholder="Jenis Buku"]').value;
+                    const jumlah = item.querySelector('input[placeholder="Jumlah"]').value;
+                    
+                    const bukuElement = document.createElement('p');
+                    bukuElement.textContent = `- ${jumlah} buku ${jenis} dengan judul "${judul}"`;
+                    bukuDetails.appendChild(bukuElement);
+                });
+                
+                showToast('Janji donasi berhasil dibuat!', 'success');
+                setButtonLoading(submitButton, false);
+                
+                // Reset form setelah berhasil
+                this.reset();
+                
+                // Hapus semua buku item kecuali yang pertama
+                const bukuContainer = document.getElementById('bukuContainer');
+                while (bukuContainer.children.length > 1) {
+                    bukuContainer.removeChild(bukuContainer.lastChild);
+                }
+            }, 2000);
+        });
+        
+        // Hapus buku item (event delegation)
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('hapus-buku')) {
+                // Jangan hapus jika hanya tersisa satu buku item
+                const bukuItems = document.querySelectorAll('.buku-item');
+                if (bukuItems.length > 1) {
+                    e.target.closest('.buku-item').remove();
+                } else {
+                    showToast('Minimal harus ada satu buku dalam donasi', 'warning');
+                }
+            }
+        });
+        
+        // ===== KREATOR FUNCTIONALITY =====
+        
+        // Inisialisasi chart untuk kreator
+        function initializeKreatorCharts() {
+            // Chart kampanye
+            const kampanyeCtx = document.getElementById('kampanyeChart').getContext('2d');
+            new Chart(kampanyeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Buku Anak Marjinal', 'Perpustakaan Desa', 'Pendidikan Inklusif', 'Buku Digital'],
+                    datasets: [{
+                        label: 'Buku Terkumpul',
+                        data: [650, 600, 450, 300],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(255, 159, 64, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Progress Kampanye Donasi'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Jumlah Buku'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Chart jenis buku
+            const jenisBukuCtx = document.getElementById('jenisBukuChart').getContext('2d');
+            new Chart(jenisBukuCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Buku Anak', 'Buku Pelajaran', 'Novel', 'Ensiklopedia', 'Buku Agama'],
+                    datasets: [{
+                        data: [35, 25, 20, 10, 10],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribusi Jenis Buku'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // ===== ADMIN FUNCTIONALITY =====
+        
+        // Inisialisasi chart untuk admin
+        function initializeAdminCharts() {
+            // Chart statistik donasi
+            const donasiCtx = document.getElementById('statistikDonasiChart').getContext('2d');
+            new Chart(donasiCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                    datasets: [{
+                        label: 'Buku Didonasikan',
+                        data: [65, 79, 90, 81, 56, 55, 40, 75, 90, 110, 95, 120],
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Trend Donasi Bulanan'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Jumlah Buku'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Chart statistik user
+            const userCtx = document.getElementById('statistikUserChart').getContext('2d');
+            new Chart(userCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Donatur', 'Kreator', 'Admin'],
+                    datasets: [{
+                        data: [350, 45, 5],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(255, 99, 132, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribusi Pengguna'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Form finalisasi penyaluran admin
+        document.getElementById('finalisasiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            // Simpan teks asli tombol
+            if (!submitButton.getAttribute('data-original-text')) {
+                submitButton.setAttribute('data-original-text', submitButton.innerHTML);
+            }
+            
+            setButtonLoading(submitButton, true);
+            
+            // Simulasi proses finalisasi
+            setTimeout(() => {
+                const idDonasi = document.getElementById('finalIdDonasi').value;
+                const hashBukti = document.getElementById('finalHash').value;
+                
+                showToast(`Penyaluran donasi ${idDonasi} berhasil difinalisasi! Hash: ${hashBukti}`, 'success');
+                setButtonLoading(submitButton, false);
+                
+                // Reset form
+                this.reset();
+            }, 2000);
+        });
+        
+        // Form pengaturan admin
+        document.getElementById('pengaturanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            // Simpan teks asli tombol
+            if (!submitButton.getAttribute('data-original-text')) {
+                submitButton.setAttribute('data-original-text', submitButton.innerHTML);
+            }
+            
+            setButtonLoading(submitButton, true);
+            
+            // Simulasi proses penyimpanan pengaturan
+            setTimeout(() => {
+                showToast('Pengaturan sistem berhasil disimpan!', 'success');
+                setButtonLoading(submitButton, false);
+            }, 1500);
+        });
+        
+        // Inisialisasi tanggal dengan tanggal hari ini
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('tanggalPenyerahanForm').value = today;
+            document.getElementById('finalTanggal').value = today;
+        });
+    </script>
+</body>
+</html>
