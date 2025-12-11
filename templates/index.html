@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-center text-center" 
+     style="min-height: 85vh; padding-top: 80px; position: relative;">
+    <div class="position-absolute w-100 h-100" 
+         style="
+            background: 
+                linear-gradient(
+                    rgba(0, 0, 0, 0.55),
+                    rgba(0, 0, 0, 0.85)
+                ),
+                url('https://images.unsplash.com/photo-1535905557558-afc4877a26fc?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.55;
+            filter: blur(1.5px);
+         ">
+    </div>
+
+    <div class="container position-relative z-2">
+        <h1 class="display-2 fw-bold mb-4 text-white" style="text-shadow: 0 4px 20px rgba(0,0,0,0.9);">
+            <span style="color: #c62a32;">Sistem Donasi Buku Terdesentralisasi.</span>
+        </h1>
+        
+        <p class="lead text-light mb-5 mx-auto col-md-10" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8); opacity: 0.9;">
+            DeBOOKS merupakan platform donasi buku terdesentralisasi yang didedikasikan untuk meningkatkan minat baca masyarakat Indonesia. Mengingat masih banyak masyarakat, khususnya anak-anak, yang kurang dalam minat membaca karena keterbatasan fasilitas seperti perpustakaan, website ini hadir sebagai solusi penyaluran buku yang transparan dan terpercaya.
+        </p>
+        
+        <div class="d-flex justify-content-center gap-3">
+            {% if session.get('user_id') %}
+                {% if session['role'] == 'kreator' %}
+                    <a href="/kreator/dashboard" class="btn btn-netflix btn-lg px-5 shadow-lg">
+                        <i class="fas fa-plus-circle me-2"></i> Buat Kampanye
+                    </a>
+                {% else %}
+                    <a href="#campaign-list" class="btn btn-netflix btn-lg px-5 shadow-lg">
+                        <i class="fas fa-book-open me-2"></i> Mulai Donasi
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="/login" class="btn btn-netflix btn-lg px-5 shadow-lg">
+                    Mulai Sekarang
+                </a>
+            {% endif %}
+            
+            <a href="#about" class="btn btn-outline-light btn-lg px-4" style="backdrop-filter: blur(5px);">
+                <i class="fas fa-info-circle me-2"></i> Pelajari
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container position-relative z-2" style="margin-top: -50px; margin-bottom: 80px;">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="p-4 h-100 rounded text-center border border-secondary" 
+                 style="background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <i class="fas fa-link text-danger mb-3" style="font-size: 2.5rem;"></i>
+                <h4 class="fw-bold">On-Chain Data</h4>
+                <p class="text-white-50 small mb-0">Semua transaksi donasi dicatat di Ganache Blockchain, mustahil dimanipulasi.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 h-100 rounded text-center border border-secondary" 
+                 style="background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <i class="fas fa-globe-asia text-danger mb-3" style="font-size: 2.5rem;"></i>
+                <h4 class="fw-bold">Dampak Nyata</h4>
+                <p class="text-white-50 small mb-0">Menjangkau perpustakaan desa dan sekolah di pelosok yang membutuhkan akses buku.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 h-100 rounded text-center border border-secondary" 
+                 style="background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <i class="fas fa-user-shield text-danger mb-3" style="font-size: 2.5rem;"></i>
+                <h4 class="fw-bold">Terverifikasi</h4>
+                <p class="text-white-50 small mb-0">Kreator dan kampanye diverifikasi untuk mencegah penipuan penggalangan dana.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="campaign-list" class="py-5" style="background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h6 class="text-danger fw-bold text-uppercase ls-2">Trending Now</h6>
+                <h2 class="fw-bold text-white">Bantu Mereka Membaca</h2>
+            </div>
+            <a href="#" class="text-white-50 text-decoration-none hover-white">Lihat Semua <i class="fas fa-arrow-right ms-1"></i></a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for camp in campaigns %}
+            <div class="col">
+                <a href="{% if session.get('role') == 'donatur' %}/donatur/donate/{{ camp.id }}{% else %}/login{% endif %}" class="text-decoration-none text-white">
+                    <div class="campaign-card h-100 d-flex flex-column">
+                        <div class="position-relative">
+                            
+                            {% if camp.image_filename %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ camp.image_filename) }}" 
+                                     class="card-img-top" 
+                                     style="height: 180px; object-fit: cover;"
+                                     alt="{{ camp.title }}">
+                            {% else %}
+                                <div class="card-img-top d-flex align-items-center justify-content-center bg-secondary" style="height: 180px;">
+                                    <i class="fas fa-image text-white-50 fa-2x"></i>
+                                </div>
+                            {% endif %}
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-black bg-opacity-75 backdrop-blur">Active</span>
+                            </div>
+                        </div>
+                        <div class="p-3 d-flex flex-column flex-grow-1">
+                            <h5 class="fw-bold mb-2">{{ camp.title }}</h5>
+                            <p class="text-white-50 small mb-3 flex-grow-1">{{ camp.description[:60] }}...</p>
+                            
+                            <div class="progress" style="height: 4px; background-color: rgba(255,255,255,0.1);">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 45%;"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2 small">
+                                <span class="text-success fw-bold">{{ camp.target_amount }} ETH</span>
+                                <span class="text-muted">Target</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="col-12 text-center py-5">
+                <div class="p-5 rounded border border-secondary" style="background: rgba(255,255,255,0.05);">
+                    <i class="fas fa-box-open mb-3 display-4 text-secondary"></i>
+                    <p class="text-muted">Belum ada kampanye aktif saat ini.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id="about" class="container py-5 mt-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h2 class="display-5 fw-bold mb-4">Teknologi untuk<br>Kebaikan Sosial.</h2>
+            <p class="fs-5 text-white-50 mb-4">
+                DeBOOKS menggabungkan keindahan literasi dengan ketangguhan teknologi Blockchain. 
+                Kami percaya bahwa transparansi adalah kunci untuk meningkatkan partisipasi publik dalam donasi.
+            </p>
+            <ul class="list-unstyled text-white-50">
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Smart Contract Verification</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Real-time Transaction Tracking</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Secure Wallet Integration</li>
+            </ul>
+        </div>
+        <div class="col-lg-6">
+            <div class="position-relative">
+                <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     class="img-fluid rounded shadow-lg border border-secondary" 
+                     style="transform: rotate(2deg); opacity: 0.9;">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

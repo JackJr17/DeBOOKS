@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center" style="padding-top: 50px; padding-bottom: 50px;">
+    <div class="col-lg-10">
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="glass-panel p-5 rounded shadow-lg border border-secondary" style="background: rgba(20,20,20,0.9);">
+            
+            <div class="text-center mb-5">
+                <h6 class="text-danger text-uppercase ls-2 fw-bold">Kreator Area</h6>
+                <h3 class="fw-bold display-6">Mulai Kampanye Baru</h3>
+                <p class="text-white-50">Ceritakan kebutuhan perpustakaan Anda dan galang dukungan global.</p>
+            </div>
+
+            <form method="POST" action="/kreator/create" enctype="multipart/form-data">
+                <div class="row g-4">
+                    
+                    <div class="col-md-6">
+                        <h5 class="text-white mb-3 border-bottom border-secondary pb-2">📖 Informasi Buku</h5>
+                        
+                        <div class="mb-3">
+                            <label class="small text-white-50 mb-1">Judul Kampanye</label>
+                            <input type="text" name="title" class="form-control bg-dark text-white border-secondary" placeholder="Contoh: 100 Buku Cerita untuk Desa Wae Rebo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="small text-white-50 mb-1">Kategori Buku Dibutuhkan</label>
+                            <select name="category" class="form-select bg-dark text-white border-secondary" required>
+                                <option value="" disabled selected>Pilih Kategori</option>
+                                <option value="Pendidikan">Pendidikan / Buku Pelajaran</option>
+                                <option value="Cerita Anak">Cerita Anak / Dongeng</option>
+                                <option value="Novel">Novel / Fiksi Remaja</option>
+                                <option value="Ensiklopedia">Ensiklopedia / Umum</option>
+                                <option value="Agama">Agama / Spiritual</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="small text-white-50 mb-1">Cerita & Tujuan (Deskripsi)</label>
+                            <textarea name="desc" class="form-control bg-dark text-white border-secondary" rows="5" placeholder="Jelaskan mengapa buku ini penting bagi komunitas Anda..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5 class="text-white mb-3 border-bottom border-secondary pb-2">📍 Target & Lokasi</h5>
+
+                        <div class="mb-3">
+                            <label class="small text-white-50 mb-1">Lokasi Penerima Donasi</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary text-white-50"><i class="fas fa-map-marker-alt"></i></span>
+                                <input type="text" name="location" class="form-control bg-dark text-white border-secondary" placeholder="Nama Kota / Desa" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="small text-white-50 mb-1">Batas Waktu (Deadline)</label>
+                            <input type="date" name="deadline" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="small text-white-50 mb-1">Target Dana Operasional (ETH)</label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" name="target" class="form-control bg-dark text-white border-secondary" placeholder="1.0" required>
+                                <span class="input-group-text bg-dark border-secondary text-white fw-bold">ETH</span>
+                            </div>
+                            <small class="text-muted" style="font-size: 0.7rem;">*Dana ini akan dicatat di Smart Contract.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="small text-white-50 mb-1">Upload Foto Sampul</label>
+                            <input type="file" name="image" class="form-control bg-dark text-white border-secondary" accept="image/*">
+                            <small class="text-muted" style="font-size: 0.7rem;">Format: JPG/PNG. Foto akan diupload ke server.</small>
+                        </div>
+                        </div>
+
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-netflix w-100 py-3 fw-bold fs-5 shadow-lg hover-scale">
+                            <i class="fas fa-rocket me-2"></i> Luncurkan Kampanye
+                        </button>
+                        <div class="text-center mt-3">
+                            <small class="text-white-50">Dengan menekan tombol ini, data target dana akan ditulis secara permanen ke Blockchain.</small>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-scale {
+        transition: transform 0.2s;
+    }
+    .hover-scale:hover {
+        transform: scale(1.02);
+    }
+</style>
+{% endblock %}

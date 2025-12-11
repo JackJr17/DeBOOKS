@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-danger mb-4">🛡️ Admin Control Panel</h2>
+    
+    <div class="row text-center">
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary p-5 mb-3">
+                <h1>{{ total_donatur }}</h1>
+                <p class="text-muted">Total Donatur Terdaftar</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary p-5 mb-3">
+                <h1>{{ total_campaigns }}</h1>
+                <p class="text-muted">Total Kampanye Aktif</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-3">
+        <strong>Live Blockchain Monitor:</strong> Terhubung ke Ganache Network ID 5777.
+    </div>
+</div>
+{% endblock %}

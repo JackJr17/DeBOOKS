@@ -1,0 +1,144 @@
+/* --- NETFLIX CORE VARIABLES --- */
+:root {
+    --netflix-red: #E50914;
+    --netflix-black: #141414;
+    --netflix-dark-gray: #181818;
+    --netflix-light-gray: #b3b3b3;
+}
+
+body {
+    background-color: var(--netflix-black);
+    color: white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow-x: hidden; /* Mencegah scroll samping halaman utama */
+}
+
+/* --- NAVBAR --- */
+.navbar {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+    padding: 15px 4%;
+    transition: background-color 0.5s;
+}
+
+.navbar-brand {
+    color: var(--netflix-red) !important;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.nav-link {
+    color: var(--netflix-light-gray) !important;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: white !important;
+}
+
+/* --- BUTTONS --- */
+.btn-netflix {
+    background-color: var(--netflix-red);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.btn-netflix:hover {
+    background-color: #f40612;
+    color: white;
+}
+
+/* --- HERO SECTION (Banner Besar) --- */
+.hero-section {
+    position: relative;
+    height: 85vh; /* 85% tinggi layar */
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Gradasi Hitam di bawah supaya teks terbaca dan nyambung ke body */
+    background: linear-gradient(to top, var(--netflix-black) 10%, transparent 50%);
+}
+
+.hero-content {
+    position: absolute;
+    bottom: 30%;
+    left: 5%;
+    max-width: 600px;
+}
+
+/* --- HORIZONTAL SCROLL (Movie Row) --- */
+.row-container {
+    padding-left: 5%;
+    margin-bottom: 40px;
+}
+
+.row-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #e5e5e5;
+}
+
+/* Magic Horizontal Scroll */
+.netflix-row {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    gap: 10px; /* Jarak antar kartu */
+}
+
+/* Sembunyikan Scrollbar tapi tetap bisa di-scroll */
+.netflix-row::-webkit-scrollbar {
+    display: none;
+}
+
+.campaign-card {
+    min-width: 250px; /* Lebar tetap supaya tidak mengecil */
+    height: 160px;    /* Tampilan Landscape ala Netflix */
+    border-radius: 4px;
+    background-color: #333;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.campaign-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.campaign-card:hover {
+    transform: scale(1.1); /* Zoom effect */
+    z-index: 100;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    border: 2px solid white; /* Border putih saat hover */
+}
+
+/* Info Text di dalam card (muncul saat hover atau static kecil di bawah) */
+.card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0,0,0,0.8);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.campaign-card:hover .card-info {
+    opacity: 1;
+}

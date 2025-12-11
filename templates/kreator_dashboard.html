@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="padding-top: 80px;">
+    
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h6 class="text-danger text-uppercase ls-2 fw-bold mb-2">Workspace Kreator</h6>
+            <h2 class="fw-bold display-5 text-white">Kelola Kampanye</h2>
+            <p class="text-white-50">Pantau performa penggalangan dana buku Anda di sini.</p>
+        </div>
+        
+        <a href="/kreator/create" class="btn btn-netflix btn-lg px-4 shadow-lg">
+            <i class="fas fa-plus-circle me-2"></i> Buat Kampanye Baru
+        </a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for c in campaigns %}
+        <div class="col">
+            <div class="campaign-card h-100 d-flex flex-column border-0 glass-panel overflow-hidden position-relative">
+                
+                <div class="position-absolute top-0 end-0 m-3 z-2">
+                    <span class="badge bg-success shadow-sm">
+                        <i class="fas fa-check-circle me-1"></i> {{ c.status }}
+                    </span>
+                </div>
+
+                <div class="position-relative" style="height: 180px; overflow: hidden;">
+                    
+                    {% if c.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ c.image_filename) }}" 
+                             class="w-100 h-100 object-fit-cover" 
+                             alt="{{ c.title }}">
+                    {% else %}
+                        <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-secondary">
+                            <i class="fas fa-book fa-3x text-white-50"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-absolute bottom-0 start-0 w-100 p-2" 
+                         style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                         <small class="text-white font-monospace ms-1"><i class="fas fa-hashtag me-1"></i>BLOCKCHAIN-ID: {{ c.blockchain_id }}</small>
+                    </div>
+                </div>
+                
+                <div class="p-4 d-flex flex-column flex-grow-1">
+                    <h5 class="fw-bold text-white mb-2">{{ c.title }}</h5>
+                    <p class="small text-white-50 mb-3">{{ c.description[:80] }}...</p>
+                    
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between small text-white-50 mb-1">
+                            <span>Dana Terkumpul</span>
+                            <span class="text-white fw-bold">0 ETH</span>
+                        </div>
+                        <div class="progress mb-3" style="height: 6px; background: rgba(255,255,255,0.1);">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background: rgba(0,0,0,0.3);">
+                            <div>
+                                <small class="d-block text-white-50" style="font-size: 0.7rem;">TARGET</small>
+                                <span class="fw-bold text-success">{{ c.target_amount }} ETH</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-light disabled" style="opacity: 0.5;">
+                                <i class="fas fa-lock me-1"></i> Withdraw
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="glass-panel text-center py-5 rounded border border-secondary border-opacity-50">
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-dark rounded-circle border border-secondary" style="width: 80px; height: 80px;">
+                        <i class="fas fa-folder-open fa-2x text-white-50"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-white">Belum Ada Kampanye</h3>
+                <p class="text-white-50 mb-4 col-md-6 mx-auto">
+                    Anda belum membuat kampanye penggalangan buku apapun. Mulailah perubahan hari ini dengan mendaftarkan kebutuhan perpustakaan Anda.
+                </p>
+                <a href="/kreator/create" class="btn btn-danger btn-lg px-5 fw-bold shadow-lg">
+                    <i class="fas fa-rocket me-2"></i> Mulai Kampanye Pertama
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

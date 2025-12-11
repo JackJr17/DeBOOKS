@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeBOOKS | Decentralized Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- PREMIUM CINEMATIC THEME --- */
+        :root {
+            --netflix-red: #E50914;
+            --glass-black: rgba(20, 20, 20, 0.85); /* Transparan Gelap */
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            /* Latar Belakang: Rak Buku Tua Megah dengan Overlay Gelap Kuat */
+            background: 
+                linear-gradient(to bottom, rgba(10, 10, 10, 0.92), rgba(20, 20, 20, 0.96)),
+                url('https://images.unsplash.com/photo-1507842217343-583bb7260b66?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-attachment: fixed; /* Parallax Effect: Gambar diam saat scroll */
+            background-size: cover;
+            background-position: center;
+            color: #e0e0e0; /* Putih sedikit redup biar tidak sakit mata */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Navbar dengan efek Glassmorphism (Kaca Buram) */
+        .navbar {
+            background: rgba(0, 0, 0, 0.6) !important;
+            backdrop-filter: blur(15px); /* Efek Blur di belakang navbar */
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 4%;
+            transition: all 0.4s ease;
+        }
+
+        .navbar-brand {
+            color: var(--netflix-red) !important;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 0px 0px 20px rgba(229, 9, 20, 0.5); /* Red Glow */
+        }
+
+        .nav-link {
+            color: #b3b3b3 !important;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-link:hover { color: white !important; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+        /* Button Styling */
+        .btn-netflix {
+            background: linear-gradient(180deg, #E50914 0%, #b20710 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-netflix:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(229, 9, 20, 0.6);
+            color: white;
+        }
+
+        /* Footer Menyatu dengan Background */
+        footer {
+            background: linear-gradient(to top, #000000 0%, rgba(0,0,0,0.8) 100%);
+            border-top: 1px solid var(--glass-border);
+            margin-top: auto;
+        }
+
+        /* Global Card Styling (Agar konsisten di semua halaman) */
+        .campaign-card {
+            background-color: rgba(40, 40, 40, 0.6); /* Semi transparan */
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            transition: transform 0.3s ease, border-color 0.3s;
+            overflow: hidden;
+        }
+        .campaign-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">DeBOOKS</a>
+            
+            <button class="navbar-toggler bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#campaign-list">Jelajahi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">Tentang</a></li>
+                </ul>
+
+                <ul class="navbar-nav align-items-center">
+                    {% if session.get('user_id') %}
+                        <li class="nav-item me-3 text-white small d-none d-md-block">
+                            <div class="d-flex align-items-center px-3 py-1 rounded-pill" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                                <i class="fas fa-wallet text-warning me-2"></i> 
+                                <span style="font-family: monospace;">{{ session['wallet'][:6] }}...{{ session['wallet'][-4:] }}</span>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" width="32" class="rounded shadow-sm">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg" style="background: rgba(20,20,20,0.95); border: 1px solid #333;">
+                                <li><a class="dropdown-item py-2" href="#">Dashboard {{ session['role']|upper }}</a></li>
+                                <li><hr class="dropdown-divider bg-secondary"></li>
+                                <li><a class="dropdown-item text-danger fw-bold py-2" href="/logout">Keluar</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="/login" class="btn btn-netflix btn-sm">Masuk / Daftar</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div style="flex: 1;">
+
+
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="py-5 text-center text-white-50">
+        <div class="container">
+            <h4 class="text-white fw-bold mb-3" style="letter-spacing: 3px;">DeBOOKS</h4>
+            <p class="small mb-4">Platform Donasi Buku Terdesentralisasi pertama di Indonesia.</p>
+            <div class="d-flex justify-content-center gap-4 mb-4 small">
+                <a href="#" class="text-decoration-none text-white-50 hover-white">Privacy</a>
+                <a href="#" class="text-decoration-none text-white-50 hover-white">Terms</a>
+                <a href="#" class="text-decoration-none text-white-50 hover-white">Help Center</a>
+            </div>
+            <small>&copy; 2025 DeBOOKS Blockchain Project.</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
