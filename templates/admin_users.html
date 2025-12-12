@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 120px; padding-bottom: 80px; z-index: 2;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="/admin/dashboard" class="text-white-50 text-decoration-none small mb-2 d-inline-block">
+                <i class="fas fa-arrow-left me-1"></i> Kembali ke Dashboard
+            </a>
+            <h2 class="fw-bold text-white m-0">Manajemen Pengguna</h2>
+            <p class="text-white-50 small">Daftar semua akun yang terdaftar di platform DeBOOKS.</p>
+        </div>
+        <div>
+            <button class="btn btn-outline-light btn-sm rounded-pill px-3" onclick="alert('Fitur Export akan segera hadir!')">
+                <i class="fas fa-download me-2"></i>Export Data
+            </button>
+        </div>
+    </div>
+
+    <div class="glass-panel rounded overflow-hidden border border-secondary border-opacity-25 shadow-lg">
+        
+        <div class="p-3 bg-black bg-opacity-25 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex gap-2 align-items-center">
+                <span class="badge bg-secondary rounded-pill px-3">{{ users|length }} Users</span>
+                <span class="text-white-50 small ms-2"><i class="fas fa-info-circle me-1"></i>Total pengguna terdaftar</span>
+            </div>
+            
+            <div class="input-group input-group-sm" style="max-width: 300px;">
+                <span class="input-group-text bg-dark border-secondary text-white-50"><i class="fas fa-search"></i></span>
+                <input type="text" id="searchInput" class="form-control bg-dark border-secondary text-white" placeholder="Cari username..." onkeyup="filterTable()">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0 align-middle" style="background: transparent;">
+                <thead>
+                    <tr class="text-uppercase small text-white-50" style="background: rgba(0,0,0,0.2);">
+                        <th class="ps-4 py-3">ID</th>
+                        <th class="py-3">Username</th>
+                        <th class="py-3">Role / Peran</th>
+                        <th class="py-3">Wallet Address</th>
+                        <th class="py-3 text-end pe-4">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    {% for u in users %}
+                    <tr>
+                        <td class="ps-4 text-white-50">#{{ u.id }}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle me-3 {{ 'bg-danger' if u.role == 'admin' else ('bg-info' if u.role == 'kreator' else 'bg-success') }}">
+                                    {{ u.username[0] | upper }}
+                                </div>
+                                <span class="fw-bold text-white username-text">{{ u.username }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if u.role == 'admin' %}
+                                <span class="badge border border-danger text-danger bg-transparent rounded-pill px-3">ADMIN</span>
+                            {% elif u.role == 'kreator' %}
+                                <span class="badge border border-info text-info bg-transparent rounded-pill px-3">KREATOR</span>
+                            {% else %}
+                                <span class="badge border border-success text-success bg-transparent rounded-pill px-3">DONATUR</span>
+                            {% endif %}
+                        </td>
+                        <td class="font-monospace text-white-50 small">
+                            <i class="fab fa-ethereum me-1 text-secondary"></i>
+                            {% if u.wallet_address and u.wallet_address != '0x0000000000000000000000000000000000000000' %}
+                                {{ u.wallet_address[:8] }}...{{ u.wallet_address[-6:] }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            {% if u.username != 'admin' %}
+                            <button class="btn btn-sm btn-outline-danger border-0" title="Hapus User" onclick="return confirm('Hapus user {{ u.username }}?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            {% else %}
+                            <button class="btn btn-sm btn-outline-secondary border-0" disabled title="Admin Utama tidak bisa dihapus">
+                                <i class="fas fa-lock"></i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-white-50">
+                            Tidak ada data pengguna ditemukan.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    /* Background Setup */
+    .page-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); 
+        background-size: cover; background-position: center; z-index: 0;
+    }
+    .page-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.98));
+        backdrop-filter: blur(5px); z-index: 1;
+    }
+
+    /* Glass Panel */
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Table Styling Overrides */
+    .table-dark { --bs-table-bg: transparent; --bs-table-hover-bg: rgba(255, 255, 255, 0.05); }
+    td, th { border-bottom-color: rgba(255, 255, 255, 0.1) !important; }
+
+    /* Avatar styling */
+    .avatar-circle {
+        width: 35px; height: 35px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: bold; font-size: 0.8rem;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+</style>
+
+<script>
+function filterTable() {
+    // Ambil nilai input
+    var input = document.getElementById("searchInput");
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("userTableBody");
+    var tr = table.getElementsByTagName("tr");
+
+    // Loop semua baris tabel
+    for (var i = 0; i < tr.length; i++) {
+        // Ambil kolom Username (index ke-1)
+        var td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            var txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }       
+    }
+}
+</script>
+
+{% endblock %}

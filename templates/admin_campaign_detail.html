@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 120px; padding-bottom: 80px; z-index: 2;">
+
+    <div class="mb-4">
+        <a href="/admin/campaigns" class="text-white-50 text-decoration-none small mb-2 d-inline-block">
+            <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar Kampanye
+        </a>
+        <div class="d-flex justify-content-between align-items-end">
+            <div>
+                <span class="badge {{ 'bg-success' if campaign.status == 'Active' else 'bg-warning text-dark' }} mb-2">
+                    {{ campaign.status }}
+                </span>
+                <h2 class="fw-bold text-white mb-0">{{ campaign.title }}</h2>
+                <p class="text-white-50 mt-1">
+                    Kreator: <span class="text-white fw-bold">{{ campaign.creator_name }}</span> | 
+                    Target: <span class="text-success">{{ campaign.target_amount }} ETH</span>
+                </p>
+            </div>
+            <div class="text-end">
+                <div class="p-3 glass-panel rounded border border-secondary border-opacity-25 text-center">
+                    <h3 class="fw-bold text-white m-0">{{ donations|length + pledges|length }}</h3>
+                    <small class="text-white-50 small">Total Donasi</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success border-0 shadow-lg bg-opacity-75 mb-4">
+                    <i class="fas fa-check-circle me-2"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+
+            <div class="glass-panel p-4 rounded border border-secondary border-opacity-25 shadow-lg mb-4">
+                <h5 class="text-white fw-bold border-bottom border-secondary border-opacity-50 pb-3 mb-3">
+                    <i class="fas fa-user-shield me-2 text-warning"></i> Verifikasi Kreator
+                </h5>
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="text-white-50 small mb-1">Deskripsi Diri / Organisasi:</p>
+                        <div class="p-3 bg-dark bg-opacity-50 rounded text-white mb-3">
+                            "{{ campaign.creator_bio }}"
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-white-50 small mb-1">Media Sosial:</p>
+                        <a href="https://instagram.com/{{ campaign.instagram_link }}" target="_blank" class="btn btn-outline-light w-100 mb-2">
+                            <i class="fab fa-instagram me-2"></i> @{{ campaign.instagram_link }}
+                        </a>
+                        <div class="small text-white-50 text-center fst-italic">
+                            *Klik untuk memverifikasi akun
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-4 rounded border border-secondary border-opacity-25 shadow-lg mb-4">
+                <h5 class="text-white fw-bold border-bottom border-secondary border-opacity-50 pb-3 mb-3">
+                    <i class="fas fa-book-reader me-2 text-info"></i> Narasi & Cerita Kampanye
+                </h5>
+                <p class="text-white-50" style="white-space: pre-wrap;">{{ campaign.description }}</p>
+                <div class="small text-muted mt-4">
+                    <i class="fas fa-map-marker-alt me-1"></i> Lokasi: {{ campaign.location }}
+                    <span class="ms-3"><i class="fas fa-calendar-alt me-1"></i> Deadline: {{ campaign.deadline }}</span>
+                </div>
+            </div>
+
+            <div class="glass-panel p-4 rounded border border-secondary border-opacity-25 shadow-lg mb-4">
+                <h5 class="text-white fw-bold border-bottom border-secondary border-opacity-50 pb-3 mb-3">
+                    <i class="fas fa-cogs me-2 text-danger"></i> Kontrol Moderasi Kampanye
+                </h5>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="me-4">
+                        <p class="text-white-50 small mb-1">Status Saat Ini:</p>
+                        <span class="badge fs-6 {% if campaign.status == 'Active' %}bg-success{% elif campaign.status == 'Pending' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                            {{ campaign.status | upper }}
+                        </span>
+                    </div>
+                    <div>
+                        {% if campaign.status != 'Active' %}
+                            <a href="{{ url_for('admin_campaign_status', campaign_id=campaign.id, action='approve') }}" class="btn btn-success fw-bold me-2">
+                                <i class="fas fa-check-circle me-1"></i> Setujui
+                            </a>
+                        {% endif %}
+                        {% if campaign.status != 'Rejected' %}
+                            <a href="{{ url_for('admin_campaign_status', campaign_id=campaign.id, action='reject') }}" class="btn btn-danger fw-bold">
+                                <i class="fas fa-times-circle me-1"></i> Tolak
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-5">
+
+            <div class="glass-panel rounded overflow-hidden border border-secondary border-opacity-25 shadow-lg mb-4">
+                <div class="p-3 bg-black bg-opacity-25 border-bottom border-secondary border-opacity-25">
+                    <h5 class="text-white fw-bold m-0"><i class="fas fa-cube me-2 text-danger"></i>Donasi Langsung (Blockchain)</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0 align-middle" style="background: transparent;">
+                        <thead>
+                            <tr class="text-white-50 small text-uppercase">
+                                <th class="ps-4">Donatur</th>
+                                <th>Buku</th>
+                                <th>Status Logistik</th>
+                                <th class="text-end pe-4">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in donations %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-white">{{ d.donor_name }}</div>
+                                    <small class="text-white-50 font-monospace">ID: #{{ d.id }}</small>
+                                </td>
+                                <td>
+                                    <div class="text-white">{{ d.book_title }}</div>
+                                    <small class="text-white-50">Qty: {{ d.book_qty }}</small>
+                                </td>
+                                <td>
+                                    {% if d.shipping_status == 'Pending' %}
+                                        <span class="badge bg-warning text-dark">Di Gudang</span>
+                                    {% elif d.shipping_status == 'Shipped' %}
+                                        <span class="badge bg-info text-dark">Dikirim</span>
+                                    {% elif d.shipping_status == 'Received' %}
+                                        <span class="badge bg-success">Diterima</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ d.shipping_status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Ubah Status
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-dark shadow-lg">
+                                            <li><a class="dropdown-item text-warning" href="/admin/logistics/update/donation/{{ d.id }}/Pending"><i class="fas fa-warehouse me-2"></i>Di Gudang</a></li>
+                                            <li><a class="dropdown-item text-info" href="/admin/logistics/update/donation/{{ d.id }}/Shipped"><i class="fas fa-truck me-2"></i>Kirim</a></li>
+                                            <li><hr class="dropdown-divider bg-secondary"></li>
+                                            <li><a class="dropdown-item text-success" href="/admin/logistics/update/donation/{{ d.id }}/Received"><i class="fas fa-check-double me-2"></i>Diterima</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" class="text-center py-4 text-white-50">Belum ada donasi langsung.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded overflow-hidden border border-secondary border-opacity-25 shadow-lg">
+                <div class="p-3 bg-black bg-opacity-25 border-bottom border-secondary border-opacity-25">
+                    <h5 class="text-white fw-bold m-0"><i class="fas fa-hand-holding-heart me-2 text-info"></i>Janji Donasi (Pledges)</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0 align-middle" style="background: transparent;">
+                        <thead>
+                            <tr class="text-white-50 small text-uppercase">
+                                <th class="ps-4">Donatur</th>
+                                <th>Rencana Buku</th>
+                                <th>Jadwal & Status</th>
+                                <th class="text-end pe-4">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in pledges %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-white">{{ p.donor_name }}</div>
+                                    <small class="text-white-50 font-monospace">ID: #{{ p.id }}</small>
+                                </td>
+                                <td>
+                                    <div class="text-white">{{ p.book_title }}</div>
+                                    <small class="text-white-50">Qty: {{ p.book_qty }} | {{ p.book_condition }}</small>
+                                </td>
+                                <td>
+                                    <div class="text-info small"><i class="fas fa-calendar me-1"></i> {{ p.shipping_date }}</div>
+                                    <span class="badge {% if p.status == 'Committed' %}bg-secondary{% elif p.status == 'Pending' %}bg-warning text-dark{% elif p.status == 'Shipped' %}bg-info text-dark{% else %}bg-success{% endif %} mt-1">
+                                        {{ p.status }}
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Ubah Status
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-dark shadow-lg">
+                                            <li><a class="dropdown-item text-secondary" href="/admin/logistics/update/pledge/{{ p.id }}/Committed"><i class="fas fa-clock me-2"></i>Reset (Menunggu)</a></li>
+                                            <li><a class="dropdown-item text-warning" href="/admin/logistics/update/pledge/{{ p.id }}/Pending"><i class="fas fa-warehouse me-2"></i>Paket Tiba di Gudang</a></li>
+                                            <li><a class="dropdown-item text-info" href="/admin/logistics/update/pledge/{{ p.id }}/Shipped"><i class="fas fa-truck me-2"></i>Kirim ke Kreator</a></li>
+                                            <li><hr class="dropdown-divider bg-secondary"></li>
+                                            <li><a class="dropdown-item text-success" href="/admin/logistics/update/pledge/{{ p.id }}/Received"><i class="fas fa-check-double me-2"></i>Diterima Kreator</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" class="text-center py-4 text-white-50">Belum ada janji donasi.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .page-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); 
+        background-size: cover; background-position: center; z-index: 0;
+    }
+    .page-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.98));
+        backdrop-filter: blur(5px); z-index: 1;
+    }
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .table-dark { --bs-table-bg: transparent; --bs-table-hover-bg: rgba(255, 255, 255, 0.05); }
+    td, th { border-bottom-color: rgba(255, 255, 255, 0.1) !important; }
+    .text-dark { color: #212529 !important; }
+</style>
+
+{% endblock %}

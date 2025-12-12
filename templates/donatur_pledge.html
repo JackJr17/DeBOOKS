@@ -1,57 +1,146 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="container mt-5 d-flex justify-content-center">
-    <div class="col-md-8">
-        <div class="glass-panel p-5 rounded shadow-lg border border-secondary" 
-             style="background: rgba(20,20,20,0.9);"> <div class="text-center mb-4">
-                <h6 class="text-success text-uppercase ls-2 fw-bold">Komitmen Donasi</h6>
-                <h3 class="fw-bold">Buat Janji Donasi</h3>
-                <p class="text-white-50">Isi detail logistik pengiriman buku Anda.</p>
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 120px; padding-bottom: 80px; z-index: 2;">
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="text-center mb-5">
+                <span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 mb-3 px-3 py-2 rounded-pill">
+                    CAMPAIGN #{{ campaign.id }}
+                </span>
+                <h2 class="fw-bold text-white">{{ campaign.title }}</h2>
+                <p class="text-white-50">Silakan lengkapi formulir komitmen donasi di bawah ini.</p>
             </div>
 
-            <form method="POST">
-                <div class="row g-3">
+            <div class="glass-panel p-4 p-md-5 rounded border border-secondary border-opacity-25 shadow-lg position-relative overflow-hidden">
+                
+                <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                    <i class="fas fa-hand-holding-heart fa-6x text-white"></i>
+                </div>
+
+                <form method="POST" action="/donatur/pledge/{{ campaign.id }}">
                     
-                    <div class="col-md-6">
-                        <label class="small text-white-50 mb-1">Rencana Tanggal Pengiriman</label>
-                        <input type="date" name="shipping_date" class="form-control bg-dark text-white border-secondary" required>
+                    <h5 class="text-white border-bottom border-secondary border-opacity-50 pb-2 mb-4">
+                        <i class="fas fa-user-circle me-2 text-primary"></i> Data Donatur
+                    </h5>
+
+                    <div class="mb-3">
+                        <label class="text-white-50 small mb-1">Nama Lengkap</label>
+                        <input type="text" name="name" class="form-control bg-dark text-white border-secondary p-3" placeholder="Nama Lengkap Anda" required>
                     </div>
 
-                    <div class="col-md-6">
-                        <label class="small text-white-50 mb-1">Metode Pengiriman</label>
-                        <select name="method" class="form-select bg-dark text-white border-secondary" required>
-                            <option value="" disabled selected>Pilih Metode</option>
-                            <option value="Kurir (JNE/J&T/Sicepat)">Ekspedisi (JNE/J&T/dll)</option>
-                            <option value="Ojek Online">Ojek Online (Gosend/Grab)</option>
-                            <option value="Antar Sendiri">Antar Sendiri ke Lokasi</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="small text-white-50 mb-1">Kondisi Buku</label>
-                        <select name="condition" class="form-select bg-dark text-white border-secondary" required>
-                            <option value="Baru">Baru / Segel</option>
-                            <option value="Bekas (Sangat Layak)">Bekas (Sangat Layak)</option>
-                            <option value="Bekas (Cukup)">Bekas (Masih Terbaca)</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="small text-white-50 mb-1">Estimasi Berat (Kg)</label>
-                        <input type="number" step="0.1" name="weight" class="form-control bg-dark text-white border-secondary" placeholder="Contoh: 1.5" required>
-                    </div>
-
-                    <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-outline-success w-100 py-3 fw-bold">
-                            <i class="fas fa-save me-2"></i> Simpan Janji Donasi
-                        </button>
-                        <div class="text-center mt-3">
-                            <small class="text-muted">*Data ini disimpan di database Logistik (Off-chain) untuk penjemputan.</small>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Email</label>
+                            <input type="email" name="email" class="form-control bg-dark text-white border-secondary p-3" placeholder="email@contoh.com" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Nomor HP / WhatsApp</label>
+                            <input type="text" name="phone" class="form-control bg-dark text-white border-secondary p-3" placeholder="08xxxxxxxx" required>
                         </div>
                     </div>
-                </div>
-            </form>
+
+                    <h5 class="text-white border-bottom border-secondary border-opacity-50 pb-2 mb-4 mt-5">
+                        <i class="fas fa-book me-2 text-danger"></i> Detail Buku
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-8">
+                            <label class="text-white-50 small mb-1">Judul Buku</label>
+                            <input type="text" name="book_title" class="form-control bg-dark text-white border-secondary p-3" placeholder="Judul buku utama yang didonasikan" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-white-50 small mb-1">Jumlah</label>
+                            <input type="number" name="book_qty" class="form-control bg-dark text-white border-secondary p-3" placeholder="1" required>
+                        </div>
+                    </div>
+
+                    <h5 class="text-white border-bottom border-secondary border-opacity-50 pb-2 mb-4 mt-5">
+                        <i class="fas fa-shipping-fast me-2 text-success"></i> Rencana Pengiriman
+                    </h5>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Rencana Tanggal Kirim</label>
+                            <input type="date" name="shipping_date" class="form-control bg-dark text-white border-secondary p-3" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Metode Pengiriman</label>
+                            <select name="method" class="form-select bg-dark text-white border-secondary p-3">
+                                <option value="JNE / J&T / SiCepat">Ekspedisi (JNE/J&T/dll)</option>
+                                <option value="Ojek Online">Ojek Online (Gosend/Grab)</option>
+                                <option value="Drop Off Langsung">Antar Sendiri (Drop Off)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Kondisi Buku</label>
+                            <select name="condition" class="form-select bg-dark text-white border-secondary p-3">
+                                <option value="Baru">Baru / Segel</option>
+                                <option value="Bekas Layak">Bekas (Layak Baca)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Perkiraan Berat (Kg)</label>
+                            <div class="input-group">
+                                <input type="number" step="0.1" name="weight" class="form-control bg-dark text-white border-secondary p-3" placeholder="1.0">
+                                <span class="input-group-text bg-dark border-secondary text-white">Kg</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info bg-opacity-10 border-info text-info small mb-4">
+                        <i class="fas fa-info-circle me-1"></i> Data janji donasi akan disimpan agar Admin dan Kreator bisa memantau kedatangan paket.
+                    </div>
+
+                    <button type="submit" class="btn btn-netflix w-100 py-3 fw-bold shadow-lg text-uppercase ls-1">
+                        <i class="fas fa-save me-2"></i> Simpan Janji Donasi
+                    </button>
+
+                </form>
+            </div>
+
         </div>
     </div>
 </div>
+
+<style>
+    /* Background Setup */
+    .page-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2228&auto=format&fit=crop'); 
+        background-size: cover; background-position: center; z-index: 0;
+    }
+    .page-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), rgba(20, 20, 20, 0.95));
+        backdrop-filter: blur(4px); z-index: 1;
+    }
+    
+    /* Glass Panel Style */
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.6);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+    }
+    
+    .ls-1 { letter-spacing: 1px; }
+    
+    /* Form Focus Effects */
+    .form-control:focus, .form-select:focus {
+        background-color: rgba(0,0,0,0.5);
+        border-color: var(--bs-info);
+        box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+        color: white;
+    }
+</style>
+
 {% endblock %}

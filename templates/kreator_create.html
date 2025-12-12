@@ -1,110 +1,129 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5 d-flex justify-content-center" style="padding-top: 50px; padding-bottom: 50px;">
-    <div class="col-lg-10">
-        
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
 
-        <div class="glass-panel p-5 rounded shadow-lg border border-secondary" style="background: rgba(20,20,20,0.9);">
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 120px; padding-bottom: 80px; z-index: 2;">
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
             
             <div class="text-center mb-5">
-                <h6 class="text-danger text-uppercase ls-2 fw-bold">Kreator Area</h6>
-                <h3 class="fw-bold display-6">Mulai Kampanye Baru</h3>
-                <p class="text-white-50">Ceritakan kebutuhan perpustakaan Anda dan galang dukungan global.</p>
+                <span class="badge bg-netflix mb-3 px-3 py-2 rounded-pill shadow-sm">
+                    <i class="fas fa-rocket me-1"></i> Mulai Kebaikan
+                </span>
+                <h2 class="fw-bold text-white display-5">Buat Kampanye Baru</h2>
+                <p class="text-white-50 fs-5">Isi detail kampanye Anda untuk mulai menggalang donasi buku.</p>
             </div>
 
-            <form method="POST" action="/kreator/create" enctype="multipart/form-data">
-                <div class="row g-4">
+            <div class="glass-panel p-4 p-md-5 rounded border border-secondary border-opacity-25 shadow-lg">
+                
+                <form method="POST" action="/kreator/create" enctype="multipart/form-data">
                     
-                    <div class="col-md-6">
-                        <h5 class="text-white mb-3 border-bottom border-secondary pb-2">📖 Informasi Buku</h5>
-                        
-                        <div class="mb-3">
-                            <label class="small text-white-50 mb-1">Judul Kampanye</label>
-                            <input type="text" name="title" class="form-control bg-dark text-white border-secondary" placeholder="Contoh: 100 Buku Cerita untuk Desa Wae Rebo" required>
-                        </div>
+                    <h5 class="text-white border-bottom border-secondary border-opacity-50 pb-2 mb-4">
+                        <i class="fas fa-user-circle me-2 text-info"></i> Profil Kreator
+                    </h5>
+                    
+                    <div class="mb-4">
+                        <label class="text-white-50 small mb-1">Deskripsi Singkat Tentang Anda / Organisasi</label>
+                        <textarea name="creator_bio" class="form-control bg-dark text-white border-secondary p-3" rows="3" placeholder="Contoh: Saya adalah guru di SDN 1 pelosok yang ingin membangun pojok baca..." required></textarea>
+                        <small class="text-white-50" style="font-size: 0.75rem;">*Ceritakan siapa Anda agar Admin dan Donatur percaya.</small>
+                    </div>
 
-                        <div class="mb-3">
-                            <label class="small text-white-50 mb-1">Kategori Buku Dibutuhkan</label>
-                            <select name="category" class="form-select bg-dark text-white border-secondary" required>
-                                <option value="" disabled selected>Pilih Kategori</option>
-                                <option value="Pendidikan">Pendidikan / Buku Pelajaran</option>
-                                <option value="Cerita Anak">Cerita Anak / Dongeng</option>
-                                <option value="Novel">Novel / Fiksi Remaja</option>
-                                <option value="Ensiklopedia">Ensiklopedia / Umum</option>
-                                <option value="Agama">Agama / Spiritual</option>
+                    <div class="mb-5">
+                        <label class="text-white-50 small mb-1">Username Instagram</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-white-50">@</span>
+                            <input type="text" name="instagram_link" class="form-control bg-dark text-white border-secondary p-3" placeholder="username_anda" required>
+                        </div>
+                        <small class="text-white-50" style="font-size: 0.75rem;">*Admin akan mengecek validitas akun Anda.</small>
+                    </div>
+
+                    <h5 class="text-white border-bottom border-secondary border-opacity-50 pb-2 mb-4">
+                        <i class="fas fa-book-open me-2 text-danger"></i> Detail Kampanye
+                    </h5>
+
+                    <div class="mb-3">
+                        <label class="text-white-50 small mb-1">Judul Kampanye</label>
+                        <input type="text" name="title" class="form-control bg-dark text-white border-secondary p-3" placeholder="Contoh: 1000 Buku untuk Anak Desa" required>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Kategori</label>
+                            <select name="category" class="form-select bg-dark text-white border-secondary p-3">
+                                <option value="Pendidikan">Pendidikan</option>
+                                <option value="Sosial">Sosial & Kemanusiaan</option>
+                                <option value="Lingkungan">Lingkungan</option>
+                                <option value="Lainnya">Lainnya</option>
                             </select>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="small text-white-50 mb-1">Cerita & Tujuan (Deskripsi)</label>
-                            <textarea name="desc" class="form-control bg-dark text-white border-secondary" rows="5" placeholder="Jelaskan mengapa buku ini penting bagi komunitas Anda..." required></textarea>
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Alamat Kreator </label>
+                            <input type="text" name="location" class="form-control bg-dark text-white border-secondary p-3" placeholder="Kota / Kabupaten" required>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <h5 class="text-white mb-3 border-bottom border-secondary pb-2">📍 Target & Lokasi</h5>
-
-                        <div class="mb-3">
-                            <label class="small text-white-50 mb-1">Lokasi Penerima Donasi</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-dark border-secondary text-white-50"><i class="fas fa-map-marker-alt"></i></span>
-                                <input type="text" name="location" class="form-control bg-dark text-white border-secondary" placeholder="Nama Kota / Desa" required>
-                            </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Batas Waktu (Deadline)</label>
+                            <input type="date" name="deadline" class="form-control bg-dark text-white border-secondary p-3" required>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="small text-white-50 mb-1">Batas Waktu (Deadline)</label>
-                            <input type="date" name="deadline" class="form-control bg-dark text-white border-secondary" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="small text-white-50 mb-1">Target Dana Operasional (ETH)</label>
-                            <div class="input-group">
-                                <input type="number" step="0.01" name="target" class="form-control bg-dark text-white border-secondary" placeholder="1.0" required>
-                                <span class="input-group-text bg-dark border-secondary text-white fw-bold">ETH</span>
-                            </div>
-                            <small class="text-muted" style="font-size: 0.7rem;">*Dana ini akan dicatat di Smart Contract.</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="small text-white-50 mb-1">Upload Foto Sampul</label>
-                            <input type="file" name="image" class="form-control bg-dark text-white border-secondary" accept="image/*">
-                            <small class="text-muted" style="font-size: 0.7rem;">Format: JPG/PNG. Foto akan diupload ke server.</small>
-                        </div>
-                        </div>
-
-                    <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-netflix w-100 py-3 fw-bold fs-5 shadow-lg hover-scale">
-                            <i class="fas fa-rocket me-2"></i> Luncurkan Kampanye
-                        </button>
-                        <div class="text-center mt-3">
-                            <small class="text-white-50">Dengan menekan tombol ini, data target dana akan ditulis secara permanen ke Blockchain.</small>
+                        <div class="col-md-6">
+                            <label class="text-white-50 small mb-1">Target (ETH)</label>
+                            <input type="number" step="0.001" name="target" class="form-control bg-dark text-white border-secondary p-3" placeholder="0.5" required>
                         </div>
                     </div>
 
-                </div>
-            </form>
+                    <div class="mb-3">
+                        <label class="text-white-50 small mb-1">Cerita Kampanye</label>
+                        <textarea name="desc" class="form-control bg-dark text-white border-secondary p-3" rows="5" placeholder="Ceritakan mengapa buku ini dibutuhkan dan bagaimana dampaknya..." required></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white-50 small mb-1">Upload Gambar Sampul</label>
+                        <input type="file" name="image" class="form-control bg-dark text-white border-secondary p-3">
+                    </div>
+
+                    <button type="submit" class="btn btn-netflix w-100 py-3 fw-bold shadow-lg text-uppercase ls-1 hover-scale">
+                        <i class="fas fa-paper-plane me-2"></i> Ajukan Kampanye
+                    </button>
+
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-    .hover-scale {
-        transition: transform 0.2s;
+    .page-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=2070&auto=format&fit=crop'); 
+        background-size: cover; background-position: center; z-index: 0;
     }
-    .hover-scale:hover {
-        transform: scale(1.02);
+    .page-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), rgba(20, 20, 20, 0.95));
+        backdrop-filter: blur(4px); z-index: 1;
     }
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.6);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+    }
+    .bg-netflix { background-color: var(--netflix-red); color: white; }
+    .btn-netflix { background-color: var(--netflix-red); color: white; border: none; }
+    .btn-netflix:hover { background-color: #b20710; color: white; }
+    .form-control:focus, .form-select:focus {
+        background-color: rgba(0,0,0,0.5);
+        border-color: var(--netflix-red);
+        box-shadow: 0 0 0 0.25rem rgba(229, 9, 20, 0.25);
+        color: white;
+    }
+    .ls-1 { letter-spacing: 1px; }
+    .hover-scale:hover { transform: scale(1.02); transition: 0.2s; }
 </style>
+
 {% endblock %}

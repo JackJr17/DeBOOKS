@@ -1,36 +1,169 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">📚 Dashboard Donatur</h2>
-        <a href="/donatur/status" class="btn btn-outline-light glass-panel">Riwayat & Komitmen</a>
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 120px; padding-bottom: 80px; z-index: 2;">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5 border-bottom border-secondary border-opacity-50 pb-4">
+        <div class="mb-3 mb-md-0">
+            <span class="badge bg-danger bg-opacity-75 mb-2 px-3 py-2 rounded-pill shadow-sm">
+                <i class="fas fa-heart me-1"></i> Donatur Area
+            </span>
+            <h2 class="display-5 fw-bold text-white mb-2">Halo, {{ session.get('username') }}! 👋</h2>
+            <p class="text-white-50 m-0" style="max-width: 600px;">
+                Terima kasih telah menjadi pahlawan literasi. Pilih kampanye di bawah ini dan mulailah berbagi ilmu.
+            </p>
+        </div>
+        <div>
+            <a href="/donatur/status" class="btn btn-outline-light rounded-pill px-4 py-2 hover-scale">
+                <i class="fas fa-history me-2"></i> Riwayat & Status Donasi
+            </a>
+        </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for c in campaigns %}
-        <div class="col">
-            <div class="campaign-card h-100 d-flex flex-column p-0 border-0 glass-panel">
-                <div class="position-relative">
-                    <img src="https://source.unsplash.com/random/400x250/?library&sig={{ c.id }}" class="w-100 rounded-top" style="height: 180px; object-fit: cover;">
-                    <span class="position-absolute top-0 end-0 badge bg-danger m-2 shadow">Active</span>
-                </div>
+    <div class="row g-4">
+        {% for camp in campaigns %}
+        <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="glass-panel h-100 d-flex flex-column rounded-3 overflow-hidden position-relative hover-lift shadow-lg border border-secondary border-opacity-25">
                 
-                <div class="p-4 d-flex flex-column flex-grow-1">
-                    <h5 class="fw-bold mb-2">{{ c.title }}</h5>
-                    <p class="small text-white-50 mb-4">{{ c.description[:90] }}...</p>
+                <a href="/donatur/campaign/{{ camp.id }}" class="text-decoration-none">
+                    <div class="position-relative" style="height: 200px; overflow: hidden;">
+                        {% if camp.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ camp.image_filename) }}" 
+                                 class="w-100 h-100 object-fit-cover transition-zoom" 
+                                 alt="{{ camp.title }}">
+                        {% else %}
+                            <div class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center">
+                                <i class="fas fa-book-open fa-3x text-white-50"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge bg-black bg-opacity-75 backdrop-blur px-3 py-2 rounded-pill">
+                                Target: <span class="text-success">{{ camp.target_amount }} ETH</span>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+
+                <div class="p-4 flex-grow-1 d-flex flex-column">
+                    <div class="mb-2">
+                        <small class="text-danger fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">
+                            {{ camp.category }}
+                        </small>
+                    </div>
                     
+                    <a href="/donatur/campaign/{{ camp.id }}" class="text-decoration-none">
+                        <h5 class="fw-bold text-white mb-2 hover-text-danger">{{ camp.title }}</h5>
+                    </a>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-map-marker-alt text-white-50 me-2 small"></i>
+                        <small class="text-white-50">{{ camp.location }}</small>
+                    </div>
+
+                    <p class="text-white-50 small mb-4 line-clamp-3">
+                        {{ camp.description }}
+                    </p>
+
                     <div class="mt-auto d-grid gap-2">
-                        <a href="/donatur/donate/{{ c.id }}" class="btn btn-netflix btn-sm fw-bold">
-                            <i class="fas fa-bolt me-1"></i> Donasi Langsung
+                        <a href="/donatur/campaign/{{ camp.id }}" class="btn btn-danger fw-bold py-2 shadow-sm">
+                            <i class="fas fa-bolt me-2"></i> Donasi Langsung
                         </a>
-                        <a href="/donatur/pledge/{{ c.id }}" class="btn btn-outline-light btn-sm" style="border-color: rgba(255,255,255,0.2);">
-                            <i class="fas fa-calendar-check me-1"></i> Janji Donasi (Pledge)
+                        <a href="/donatur/campaign/{{ camp.id }}" class="btn btn-outline-light btn-sm py-2">
+                            <i class="fas fa-hand-holding-heart me-2"></i> Janji Donasi
                         </a>
                     </div>
                 </div>
             </div>
         </div>
+        {% else %}
+        <div class="col-12">
+            <div class="glass-panel text-center py-5 rounded border border-dashed border-secondary">
+                <div class="mb-3">
+                    <i class="fas fa-search fa-4x text-white-50 opacity-50"></i>
+                </div>
+                <h4 class="text-white fw-bold">Belum Ada Kampanye Aktif</h4>
+                <p class="text-white-50">Tunggu para kreator membuat kampanye baru ya!</p>
+            </div>
+        </div>
         {% endfor %}
     </div>
+
 </div>
+
+<style>
+    /* Background Setup */
+    .page-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2228&auto=format&fit=crop'); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: 0;
+    }
+
+    .page-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), rgba(20, 20, 20, 0.95));
+        backdrop-filter: blur(4px);
+        z-index: 1;
+    }
+
+    /* Glass Card Style */
+    .glass-panel {
+        background: rgba(40, 40, 40, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    /* Image Zoom Effect */
+    .object-fit-cover {
+        object-fit: cover;
+    }
+    
+    .transition-zoom {
+        transition: transform 0.5s ease;
+    }
+
+    .hover-lift:hover .transition-zoom {
+        transform: scale(1.1);
+    }
+
+    /* Typography Utility */
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(4px);
+    }
+
+    .hover-text-danger:hover {
+        color: var(--bs-danger) !important;
+        transition: color 0.2s;
+    }
+</style>
+
 {% endblock %}

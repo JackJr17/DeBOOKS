@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 120px; padding-bottom: 80px; z-index: 2;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="/admin/dashboard" class="text-white-50 text-decoration-none small mb-2 d-inline-block">
+                <i class="fas fa-arrow-left me-1"></i> Kembali ke Dashboard
+            </a>
+            <h2 class="fw-bold text-white m-0">Moderasi Kampanye</h2>
+            <p class="text-white-50 small">Setujui kampanye yang layak untuk ditampilkan ke publik.</p>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info border-0 shadow-lg bg-opacity-75 mb-4">
+                    <i class="fas fa-info-circle me-2"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="glass-panel rounded overflow-hidden border border-secondary border-opacity-25 shadow-lg">
+        
+        <div class="p-3 bg-black bg-opacity-25 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+            <span class="badge bg-secondary rounded-pill px-3">{{ campaigns|length }} Items</span>
+            <div class="text-white-50 small fst-italic">
+                <i class="fas fa-circle text-warning me-1"></i>Pending
+                <i class="fas fa-circle text-success ms-2 me-1"></i>Active
+                <i class="fas fa-circle text-danger ms-2 me-1"></i>Rejected
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0 align-middle" style="background: transparent;">
+                <thead>
+                    <tr class="text-uppercase small text-white-50" style="background: rgba(0,0,0,0.2);">
+                        <th class="ps-4 py-3">ID</th>
+                        <th class="py-3">Detail Kampanye</th>
+                        <th class="py-3">Kreator</th>
+                        <th class="py-3">Target</th>
+                        <th class="py-3 text-center">Status</th>
+                        <th class="py-3 text-end pe-4">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in campaigns %}
+                    <tr>
+                        <td class="ps-4 text-white-50 small">#{{ c.id }}</td>
+                        <td style="max-width: 300px;">
+                            <div class="d-flex align-items-center">
+                                {% if c.image_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/' ~ c.image_filename) }}" 
+                                         class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                    <div class="rounded me-3 bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <i class="fas fa-image text-white-50"></i>
+                                    </div>
+                                {% endif %}
+                                
+                                <div>
+                                    <a href="{{ url_for('admin_campaign_detail', campaign_id=c.id) }}" class="text-white fw-bold mb-1 text-truncate text-decoration-none hover-underline" style="max-width: 200px; display: block;">
+                                        {{ c.title }} <i class="fas fa-external-link-alt ms-1 small text-white-50" style="font-size: 0.7em;"></i>
+                                    </a>
+                                    <small class="text-white-50">{{ c.category }} | <i class="fas fa-map-marker-alt me-1"></i>{{ c.location }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-dark border border-secondary text-white-50">
+                                <i class="fas fa-user me-1"></i> {{ c.creator_name }}
+                            </span>
+                        </td>
+                        <td class="text-success fw-bold">{{ c.target_amount }} ETH</td>
+                        <td class="text-center">
+                            {% if c.status == 'Pending' %}
+                                <span class="badge bg-warning text-dark">PENDING</span>
+                            {% elif c.status == 'Active' %}
+                                <span class="badge bg-success">ACTIVE</span>
+                            {% else %}
+                                <span class="badge bg-danger">REJECTED</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            {% if c.status == 'Pending' %}
+                                <a href="/admin/campaign/status/{{ c.id }}/approve" class="btn btn-sm btn-success me-1" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                <a href="/admin/campaign/status/{{ c.id }}/reject" class="btn btn-sm btn-danger" title="Reject">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            {% elif c.status == 'Active' %}
+                                <a href="/admin/campaign/status/{{ c.id }}/reject" class="btn btn-sm btn-outline-danger" title="Batalkan / Reject">
+                                    <i class="fas fa-ban"></i>
+                                </a>
+                            {% else %}
+                                <a href="/admin/campaign/status/{{ c.id }}/approve" class="btn btn-sm btn-outline-secondary" title="Restore">
+                                    <i class="fas fa-undo"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-white-50">
+                            Tidak ada data kampanye.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Background Setup */
+    .page-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); 
+        background-size: cover; background-position: center; z-index: 0;
+    }
+    .page-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.98));
+        backdrop-filter: blur(5px); z-index: 1;
+    }
+
+    /* Glass Panel */
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Table Styling */
+    .table-dark { --bs-table-bg: transparent; --bs-table-hover-bg: rgba(255, 255, 255, 0.05); }
+    td, th { border-bottom-color: rgba(255, 255, 255, 0.1) !important; }
+
+    /* Hover Effect pada Link Judul */
+    .hover-underline:hover {
+        text-decoration: underline !important;
+        color: var(--bs-info) !important;
+    }
+</style>
+
+{% endblock %}

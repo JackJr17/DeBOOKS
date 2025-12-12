@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 110px; padding-bottom: 80px; z-index: 2;">
+
+    <div class="mb-4">
+        <a href="/kreator/dashboard" class="btn btn-sm btn-outline-light border-0 hover-scale ps-0">
+            <i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard
+        </a>
+    </div>
+
+    <div class="glass-panel p-4 p-md-5 rounded-4 mb-5 shadow-lg position-relative overflow-hidden border border-secondary border-opacity-25">
+        <div class="position-absolute top-0 end-0 p-5 opacity-10 text-white-50 pe-none">
+            <i class="fas fa-book-reader fa-8x"></i>
+        </div>
+        
+        <div class="row align-items-center position-relative z-2">
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <span class="badge bg-success bg-opacity-75 px-3 py-2 rounded-pill mb-3 shadow-sm">
+                    <i class="fas fa-check-circle me-1"></i> Active Campaign
+                </span>
+                <h1 class="fw-bold text-white display-5 mb-3">{{ campaign.title }}</h1>
+                <div class="d-flex align-items-center text-white-50 mb-4">
+                    <span class="me-4"><i class="fas fa-map-marker-alt me-2 text-danger"></i> {{ campaign.location }}</span>
+                    <span><i class="fas fa-tag me-2 text-info"></i> {{ campaign.category }}</span>
+                </div>
+            </div>
+            <div class="col-lg-5 text-lg-end">
+                <div class="d-flex justify-content-lg-end gap-3 gap-md-4">
+                    
+                    <div class="glass-panel p-4 rounded-4 text-center border border-info border-opacity-25 shadow-sm" style="min-width: 140px; background: rgba(13, 202, 240, 0.1);">
+                        <h2 class="display-4 fw-bold text-white m-0">{{ donations|length }}</h2>
+                        <small class="text-info fw-bold text-uppercase ls-1" style="font-size: 0.7rem;">Donasi Langsung</small>
+                    </div>
+
+                    <div class="glass-panel p-4 rounded-4 text-center border border-danger border-opacity-25 shadow-sm" style="min-width: 140px; background: rgba(220, 53, 69, 0.1);">
+                        <h2 class="display-4 fw-bold text-white m-0">{{ pledges|length }}</h2>
+                        <small class="text-danger fw-bold text-uppercase ls-1" style="font-size: 0.7rem;">Janji Donasi</small>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert glass-panel border-0 border-start border-4 border-info text-white shadow-sm mb-5 p-4 d-flex align-items-start rounded-3" style="background: rgba(13, 202, 240, 0.05);">
+        <i class="fas fa-info-circle me-3 fa-2x text-info mt-1"></i> 
+        <div>
+            <h5 class="fw-bold text-info mb-1">Informasi Logistik</h5>
+            <p class="m-0 text-white-50">Buku-buku yang didonasikan saat ini sedang dikumpulkan dan disortir oleh Admin di gudang pusat. Admin akan memperbarui status pengiriman di bawah ini ketika paket siap dikirimkan kepada Anda.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-lg-6">
+            <div class="glass-panel rounded-4 overflow-hidden border border-secondary border-opacity-25 shadow-lg h-100 d-flex flex-column">
+                <div class="p-4 bg-danger bg-opacity-10 border-bottom border-secondary border-opacity-25 d-flex align-items-center">
+                    <div class="bg-danger bg-opacity-25 p-3 rounded-circle me-3">
+                        <i class="fas fa-hand-holding-heart text-danger fa-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="text-white fw-bold m-0">Buku dari Janji Donasi</h5>
+                        <small class="text-white-50">Komitmen donatur yang akan dikirim</small>
+                    </div>
+                </div>
+                <div class="table-responsive flex-grow-1">
+                    <table class="table table-dark table-hover mb-0 align-middle custom-table" style="background: transparent;">
+                        <thead class="bg-black bg-opacity-25">
+                            <tr class="text-white-50 small text-uppercase ls-1">
+                                <th class="ps-4 py-4">Judul Buku & Donatur</th>
+                                <th class="py-4">Kondisi</th>
+                                <th class="text-end pe-4 py-4">Status Logistik</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in pledges %}
+                            <tr class="table-row-hover transition-all">
+                                <td class="ps-4 py-3">
+                                    <div class="fw-bold text-white fs-5 mb-1">{{ p.book_title }}</div>
+                                    <div class="d-flex align-items-center text-white-50 small">
+                                        <span class="badge bg-dark border border-secondary me-2">Qty: {{ p.book_qty }}</span>
+                                        <span><i class="fas fa-user me-1"></i> {{ p.donor_name }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if p.book_condition == 'Baru' %}
+                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2">Baru / Segel</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary bg-opacity-10 text-white-50 border border-secondary border-opacity-25 rounded-pill px-3 py-2">Bekas Layak</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    {% if p.status == 'Pending' %}
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-warehouse me-1"></i> Di Gudang Admin</span>
+                                    {% elif p.status == 'Shipped' %}
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-shipping-fast me-1"></i> Sedang Dikirim</span>
+                                    {% elif p.status == 'Received' %}
+                                        <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-check-double me-1"></i> Diterima Kreator</span>
+                                    {% else %}
+                                        <span class="badge bg-dark border border-secondary text-white-50 px-3 py-2 rounded-pill">Menunggu Donatur</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center py-5">
+                                    <div class="py-4 opacity-50">
+                                        <i class="fas fa-box-open fa-4x text-white-50 mb-3"></i>
+                                        <p class="text-white-50 m-0">Belum ada data janji donasi masuk.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="glass-panel rounded-4 overflow-hidden border border-secondary border-opacity-25 shadow-lg h-100 d-flex flex-column">
+                <div class="p-4 bg-info bg-opacity-10 border-bottom border-secondary border-opacity-25 d-flex align-items-center">
+                     <div class="bg-info bg-opacity-25 p-3 rounded-circle me-3">
+                        <i class="fas fa-bolt text-info fa-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="text-white fw-bold m-0">Buku dari Donasi Langsung</h5>
+                        <small class="text-white-50">Tercatat di Blockchain</small>
+                    </div>
+                </div>
+                <div class="table-responsive flex-grow-1">
+                    <table class="table table-dark table-hover mb-0 align-middle custom-table" style="background: transparent;">
+                        <thead class="bg-black bg-opacity-25">
+                            <tr class="text-white-50 small text-uppercase ls-1">
+                                <th class="ps-4 py-4">Judul Buku & Info</th>
+                                <th class="py-4 text-center">Jumlah</th>
+                                <th class="text-end pe-4 py-4">Status Logistik</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in donations %}
+                            <tr class="table-row-hover transition-all">
+                                <td class="ps-4 py-3">
+                                    <div class="fw-bold text-white fs-5 mb-1">{{ d.book_title }}</div>
+                                    <small class="text-white-50 d-block mb-2"><i class="fas fa-user me-1"></i> {{ d.donor_name }}</small>
+                                    <small class="font-monospace text-info bg-info bg-opacity-10 px-2 py-1 rounded d-inline-block text-truncate" style="max-width: 250px; font-size: 0.75rem;">
+                                        <i class="fab fa-ethereum me-1"></i> {{ d.book_details }}
+                                    </small>
+                                </td>
+                                <td class="text-center">
+                                    <span class="fw-bold text-white bg-info bg-opacity-25 border border-info border-opacity-25 px-3 py-2 rounded-pill fs-5">{{ d.book_qty }}</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    {% if d.shipping_status == 'Pending' %}
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-warehouse me-1"></i> Di Gudang Admin</span>
+                                    {% elif d.shipping_status == 'Shipped' %}
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-shipping-fast me-1"></i> Sedang Dikirim</span>
+                                    {% elif d.shipping_status == 'Received' %}
+                                        <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-check-double me-1"></i> Diterima Kreator</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary px-3 py-2 rounded-pill">Menunggu Proses</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center py-5">
+                                    <div class="py-4 opacity-50">
+                                        <i class="fab fa-ethereum fa-4x text-white-50 mb-3"></i>
+                                        <p class="text-white-50 m-0">Belum ada data donasi langsung masuk.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* Background Setup */
+    .page-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7260b66?q=80&w=2000&auto=format&fit=crop'); 
+        background-size: cover; background-position: center; z-index: 0;
+    }
+    .page-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), rgba(15, 15, 15, 0.98));
+        backdrop-filter: blur(4px); z-index: 1;
+    }
+    
+    /* Glass Panel Modern */
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.5);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Table Styling Modern */
+    .table-dark { --bs-table-bg: transparent; }
+    .custom-table th { 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+        font-weight: 600;
+    }
+    .custom-table td { 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; 
+        vertical-align: middle;
+    }
+    .table-row-hover:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    /* Utilities */
+    .hover-scale:hover { transform: scale(1.05); color: white !important; }
+    .transition-all { transition: all 0.3s ease; }
+    .ls-1 { letter-spacing: 1px; }
+    .rounded-4 { border-radius: 1rem !important; }
+    .opacity-10 { opacity: 0.1; }
+</style>
+
+{% endblock %}

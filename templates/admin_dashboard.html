@@ -1,26 +1,241 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-danger mb-4">🛡️ Admin Control Panel</h2>
-    
-    <div class="row text-center">
-        <div class="col-md-6">
-            <div class="card bg-dark border-secondary p-5 mb-3">
-                <h1>{{ total_donatur }}</h1>
-                <p class="text-muted">Total Donatur Terdaftar</p>
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 120px; padding-bottom: 80px; z-index: 2;">
+
+    <div class="d-flex justify-content-between align-items-end mb-5 border-bottom border-secondary border-opacity-50 pb-4">
+        <div>
+            <div class="d-inline-flex align-items-center gap-2 mb-2">
+                <i class="fas fa-shield-alt text-danger"></i>
+                <h6 class="text-danger text-uppercase ls-2 fw-bold m-0" style="letter-spacing: 2px;">Administrator Area</h6>
+            </div>
+            <h2 class="display-5 fw-bold text-white mb-0">Control Panel</h2>
+            <p class="text-white-50 mt-2">Ringkasan aktivitas platform dan status jaringan.</p>
+        </div>
+        <div class="text-end d-none d-md-block">
+            <span class="text-white-50 small d-block">Server Time</span>
+            <span class="text-white fw-bold font-monospace" id="clock">00:00:00</span>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        
+        <div class="col-md-4">
+            <div class="glass-panel p-4 rounded h-100 d-flex align-items-center justify-content-between position-relative overflow-hidden">
+                <div class="position-absolute start-0 top-0 h-100 bg-danger" style="width: 4px;"></div>
+                <div>
+                    <h6 class="text-white-50 text-uppercase small mb-1">Total Pengguna</h6>
+                    <h2 class="text-white fw-bold display-6 mb-0">{{ total_donatur }}</h2>
+                    <small class="text-success"><i class="fas fa-arrow-up me-1"></i>Active Users</small>
+                </div>
+                <div class="icon-circle bg-danger bg-opacity-10 text-danger">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-dark border-secondary p-5 mb-3">
-                <h1>{{ total_campaigns }}</h1>
-                <p class="text-muted">Total Kampanye Aktif</p>
+
+        <div class="col-md-4">
+            <div class="glass-panel p-4 rounded h-100 d-flex align-items-center justify-content-between position-relative overflow-hidden">
+                <div class="position-absolute start-0 top-0 h-100 bg-white" style="width: 4px;"></div>
+                <div>
+                    <h6 class="text-white-50 text-uppercase small mb-1">Total Kampanye</h6>
+                    <h2 class="text-white fw-bold display-6 mb-0">{{ total_campaigns }}</h2>
+                    <small class="text-info"><i class="fas fa-plus me-1"></i>Buku Didonasikan</small>
+                </div>
+                <div class="icon-circle bg-white bg-opacity-10 text-white">
+                    <i class="fas fa-book-open fa-2x"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-panel p-4 rounded h-100 d-flex align-items-center justify-content-between position-relative overflow-hidden">
+                <div class="position-absolute start-0 top-0 h-100 bg-success" style="width: 4px;"></div>
+                <div>
+                    <h6 class="text-white-50 text-uppercase small mb-1">Network Status</h6>
+                    <h2 class="text-success fw-bold mb-0">ONLINE</h2>
+                    <small class="text-white-50 font-monospace">Ganache RPC</small>
+                </div>
+                <div class="icon-circle bg-success bg-opacity-10 text-success">
+                    <i class="fas fa-link fa-2x"></i>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="alert alert-info mt-3">
-        <strong>Live Blockchain Monitor:</strong> Terhubung ke Ganache Network ID 5777.
+    <div class="row g-4">
+        
+        <div class="col-lg-8">
+            <div class="glass-panel rounded p-0 border border-secondary border-opacity-25 overflow-hidden">
+                <div class="p-4 border-bottom border-secondary border-opacity-25 bg-black bg-opacity-25 d-flex justify-content-between align-items-center">
+                    <h5 class="text-white fw-bold m-0"><i class="fas fa-tasks me-2 text-danger"></i>Manajemen Sistem</h5>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill">View Logs</button>
+                </div>
+                
+                <div class="p-4">
+                    <div class="row g-3">
+                        
+                        <div class="col-md-6">
+                            <a href="{{ url_for('admin_campaigns') }}" class="admin-action-card p-3 rounded border border-secondary border-opacity-25 d-block text-decoration-none">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
+                                        <i class="fas fa-bullhorn text-primary fa-lg"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white fw-bold mb-1">Kelola Kampanye</h6>
+                                        <small class="text-white-50">Approve/Reject donasi</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <a href="{{ url_for('admin_users') }}" class="admin-action-card p-3 rounded border border-secondary border-opacity-25 d-block text-decoration-none">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-10 p-3 rounded me-3">
+                                        <i class="fas fa-user-cog text-warning fa-lg"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white fw-bold mb-1">Kelola User</h6>
+                                        <small class="text-white-50">Lihat data pengguna</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <div class="p-4 border-top border-secondary border-opacity-25">
+                    <h6 class="text-white-50 mb-3 small text-uppercase">Trafik Donasi (Minggu Ini)</h6>
+                    <div class="progress" style="height: 10px; background-color: rgba(255,255,255,0.1);">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 25%"></div>
+                        <div class="progress-bar bg-white" role="progressbar" style="width: 15%"></div>
+                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 30%"></div>
+                    </div>
+                    <div class="d-flex gap-3 mt-2 small">
+                        <span class="text-white-50"><i class="fas fa-circle text-danger me-1"></i>Baru</span>
+                        <span class="text-white-50"><i class="fas fa-circle text-white me-1"></i>Bekas</span>
+                        <span class="text-white-50"><i class="fas fa-circle text-secondary me-1"></i>Logistik</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="glass-panel rounded h-100 border border-secondary border-opacity-25 d-flex flex-column">
+                <div class="p-3 border-bottom border-secondary border-opacity-25 bg-black bg-opacity-50">
+                    <div class="d-flex gap-2">
+                        <div class="rounded-circle bg-danger" style="width:10px; height:10px;"></div>
+                        <div class="rounded-circle bg-warning" style="width:10px; height:10px;"></div>
+                        <div class="rounded-circle bg-success" style="width:10px; height:10px;"></div>
+                    </div>
+                </div>
+                <div class="p-3 font-monospace small text-white-50" style="background: rgba(0,0,0,0.6); flex-grow: 1;">
+                    <div class="mb-2">
+                        <span class="text-success">root@debooks:~#</span> check_connection
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-info">></span> Connecting to Ganache...<br>
+                        <span class="text-info">></span> Provider: HTTP://127.0.0.1:7545<br>
+                        <span class="text-success">></span> Connected! Network ID: 5777
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-success">root@debooks:~#</span> monitor_blocks
+                    </div>
+                    <div class="text-muted opacity-75">
+                        [LOG] Block #12 mined (0 txs)<br>
+                        [LOG] Block #13 mined (1 txs)<br>
+                        [LOG] Smart Contract Active<br>
+                        [INFO] Gas Price: 20 gwei<br>
+                        <span class="blink-cursor">_</span>
+                    </div>
+                </div>
+                <div class="p-3 border-top border-secondary border-opacity-25 bg-black bg-opacity-25 text-center">
+                    <small class="text-success fw-bold"><i class="fas fa-wifi me-2"></i>Live Connection</small>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
+
+<style>
+    /* Mengatur Background */
+    .page-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: 0;
+    }
+
+    .page-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.98));
+        backdrop-filter: blur(5px);
+        z-index: 1;
+    }
+
+    /* Glass Effect & Card Styling */
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .admin-action-card {
+        background: rgba(255,255,255,0.03);
+        transition: all 0.2s ease;
+    }
+    
+    .admin-action-card:hover {
+        background: rgba(255,255,255,0.08);
+        transform: translateY(-2px);
+    }
+
+    .blink-cursor {
+        animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+</style>
+
+<script>
+    // Script sederhana untuk Jam Real-time
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('id-ID', { hour12: false });
+        document.getElementById('clock').textContent = timeString;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
+
 {% endblock %}

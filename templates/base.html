@@ -3,100 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeBOOKS | Decentralized Library</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>DeBOOKS | Decentralized Book Donation</title>
     
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        /* --- PREMIUM CINEMATIC THEME --- */
         :root {
             --netflix-red: #E50914;
-            --glass-black: rgba(20, 20, 20, 0.85); /* Transparan Gelap */
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --netflix-black: #141414;
+            --netflix-dark-gray: #181818;
+            --netflix-light-gray: #b3b3b3;
         }
-
+        
         body {
-            /* Latar Belakang: Rak Buku Tua Megah dengan Overlay Gelap Kuat */
-            background: 
-                linear-gradient(to bottom, rgba(10, 10, 10, 0.92), rgba(20, 20, 20, 0.96)),
-                url('https://images.unsplash.com/photo-1507842217343-583bb7260b66?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-attachment: fixed; /* Parallax Effect: Gambar diam saat scroll */
-            background-size: cover;
-            background-position: center;
-            color: #e0e0e0; /* Putih sedikit redup biar tidak sakit mata */
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--netflix-black);
+            color: white;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
         }
 
-        /* Navbar dengan efek Glassmorphism (Kaca Buram) */
+        /* Navbar Styling */
         .navbar {
-            background: rgba(0, 0, 0, 0.6) !important;
-            backdrop-filter: blur(15px); /* Efek Blur di belakang navbar */
-            border-bottom: 1px solid var(--glass-border);
-            padding: 15px 4%;
-            transition: all 0.4s ease;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+            padding: 20px 0;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar.scrolled {
+            background-color: var(--netflix-black);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .navbar-brand {
             color: var(--netflix-red) !important;
-            font-size: 1.8rem;
             font-weight: 800;
-            letter-spacing: 2px;
-            text-shadow: 0px 0px 20px rgba(229, 9, 20, 0.5); /* Red Glow */
+            font-size: 1.8rem;
+            letter-spacing: 1px;
         }
 
         .nav-link {
-            color: #b3b3b3 !important;
+            color: var(--netflix-light-gray) !important;
             font-weight: 500;
             transition: color 0.3s;
+            margin: 0 10px;
         }
-        .nav-link:hover { color: white !important; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
-        /* Button Styling */
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+
+        /* Buttons */
         .btn-netflix {
-            background: linear-gradient(180deg, #E50914 0%, #b20710 100%);
+            background-color: var(--netflix-red);
             color: white;
             border: none;
-            padding: 10px 25px;
-            font-weight: bold;
+            font-weight: 600;
+            padding: 8px 20px;
             border-radius: 4px;
-            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, background-color 0.2s;
         }
+
         .btn-netflix:hover {
+            background-color: #f40612;
             transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(229, 9, 20, 0.6);
             color: white;
         }
 
-        /* Footer Menyatu dengan Background */
-        footer {
-            background: linear-gradient(to top, #000000 0%, rgba(0,0,0,0.8) 100%);
-            border-top: 1px solid var(--glass-border);
-            margin-top: auto;
+        /* Dropdown Menu Dark */
+        .dropdown-menu-dark {
+            background-color: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
-
-        /* Global Card Styling (Agar konsisten di semua halaman) */
-        .campaign-card {
-            background-color: rgba(40, 40, 40, 0.6); /* Semi transparan */
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 6px;
-            transition: transform 0.3s ease, border-color 0.3s;
-            overflow: hidden;
+        
+        .dropdown-item {
+            color: var(--netflix-light-gray);
         }
-        .campaign-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 10;
+        
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
         }
     </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body>
 
     <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid">
+        <div class="container">
             <a class="navbar-brand" href="/">DeBOOKS</a>
             
             <button class="navbar-toggler bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -104,60 +98,88 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link active" href="/">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#campaign-list">Jelajahi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">Tentang</a></li>
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#campaign-list">Jelajahi</a>
+                    </li>
+
+                    {% if session.get('role') == 'admin' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-danger fw-bold border border-danger rounded px-3 mx-2" 
+                           href="/admin/dashboard" 
+                           style="background: rgba(229, 9, 20, 0.1);">
+                            <i class="fas fa-shield-alt me-1"></i> Dashboard Admin
+                        </a>
+                    </li>
+                    {% elif session.get('role') == 'kreator' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/kreator/dashboard">Dashboard Saya</a>
+                    </li>
+                    {% elif session.get('role') == 'donatur' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/donatur/dashboard">Dashboard Saya</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#about">Tentang</a>
+                    </li>
                 </ul>
 
-                <ul class="navbar-nav align-items-center">
+                <div class="d-flex align-items-center">
                     {% if session.get('user_id') %}
-                        <li class="nav-item me-3 text-white small d-none d-md-block">
-                            <div class="d-flex align-items-center px-3 py-1 rounded-pill" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
-                                <i class="fas fa-wallet text-warning me-2"></i> 
-                                <span style="font-family: monospace;">{{ session['wallet'][:6] }}...{{ session['wallet'][-4:] }}</span>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" width="32" class="rounded shadow-sm">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center text-white" href="#" role="button" data-bs-toggle="dropdown">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" 
+                                     class="rounded me-2" width="30" height="30" alt="Avatar">
+                                <span>{{ session.get('username') }}</span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg" style="background: rgba(20,20,20,0.95); border: 1px solid #333;">
-                                <li><a class="dropdown-item py-2" href="#">Dashboard {{ session['role']|upper }}</a></li>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg">
+                                <li><span class="dropdown-header text-uppercase small text-muted">Role: {{ session.get('role') }}</span></li>
                                 <li><hr class="dropdown-divider bg-secondary"></li>
-                                <li><a class="dropdown-item text-danger fw-bold py-2" href="/logout">Keluar</a></li>
+                                
+                                {% if session['role'] == 'admin' %}
+                                    <li><a class="dropdown-item" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
+                                {% elif session['role'] == 'kreator' %}
+                                    <li><a class="dropdown-item" href="/kreator/dashboard"><i class="fas fa-columns me-2"></i> Dashboard</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="/donatur/dashboard"><i class="fas fa-user me-2"></i> Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="/donatur/status"><i class="fas fa-box-open me-2"></i> Status Paket</a></li>
+                                {% endif %}
+                                
+                                <li><a class="dropdown-item text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
                             </ul>
-                        </li>
+                        </div>
                     {% else %}
-                        <li class="nav-item">
-                            <a href="/login" class="btn btn-netflix btn-sm">Masuk / Daftar</a>
-                        </li>
+                        <a href="/login" class="btn btn-outline-light me-2 btn-sm px-3">Masuk</a>
+                        <a href="/register" class="btn btn-netflix btn-sm px-3">Daftar</a>
                     {% endif %}
-                </ul>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div style="flex: 1;">
+    {% block content %}{% endblock %}
 
-
-        
-        {% block content %}{% endblock %}
-    </div>
-
-    <footer class="py-5 text-center text-white-50">
-        <div class="container">
-            <h4 class="text-white fw-bold mb-3" style="letter-spacing: 3px;">DeBOOKS</h4>
-            <p class="small mb-4">Platform Donasi Buku Terdesentralisasi pertama di Indonesia.</p>
-            <div class="d-flex justify-content-center gap-4 mb-4 small">
-                <a href="#" class="text-decoration-none text-white-50 hover-white">Privacy</a>
-                <a href="#" class="text-decoration-none text-white-50 hover-white">Terms</a>
-                <a href="#" class="text-decoration-none text-white-50 hover-white">Help Center</a>
-            </div>
-            <small>&copy; 2025 DeBOOKS Blockchain Project.</small>
+    <footer class="py-5 mt-auto border-top border-secondary bg-black">
+        <div class="container text-center text-white-50">
+            <p class="mb-2">&copy; 2025 DeBOOKS Decentralized Platform.</p>
+            <small>Dibuat dengan <i class="fas fa-heart text-danger"></i> untuk Dibuat dengan hati untuk membuka jendela dunia bagi mereka yang membutuhkan</small>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Efek Navbar berubah warna saat di-scroll
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+    </script>
 </body>
 </html>

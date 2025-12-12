@@ -2,16 +2,16 @@ import json
 import sqlite3
 import functools
 import random
-import os  # <--- BARU: Untuk operasi sistem file
+import os   # Untuk operasi sistem file
 from flask import Flask, render_template, request, redirect, url_for, g, session, flash
 from web3 import Web3
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename # <--- BARU: Untuk mengamankan nama file
+from werkzeug.utils import secure_filename # Untuk mengamankan nama file
 
 app = Flask(__name__)
 app.secret_key = 'kunci_baru_biar_logout_semua_123'
 
-# --- KONFIGURASI UPLOAD (BARU) ---
+# --- KONFIGURASI UPLOAD ---
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -74,13 +74,15 @@ def init_db():
             wallet_address TEXT
         )''')
         
-        # 2. Tabel Campaigns (DIUPDATE: image_url jadi image_filename)
+        # 2. Tabel Campaigns (LENGKAP: Ada creator_bio & instagram_link)
         db.execute('''CREATE TABLE IF NOT EXISTS campaigns (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             blockchain_id INTEGER,
             creator_id INTEGER,
             title TEXT NOT NULL,
             description TEXT,
+            creator_bio TEXT,
+            instagram_link TEXT,
             category TEXT,
             location TEXT,
             deadline TEXT,
@@ -89,7 +91,7 @@ def init_db():
             status TEXT DEFAULT 'Active'
         )''')
         
-        # 3. Tabel Donations
+        # 3. Tabel Donations (Donasi Langsung)
         db.execute('''CREATE TABLE IF NOT EXISTS donations (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             campaign_id INTEGER,
@@ -103,11 +105,16 @@ def init_db():
             shipping_status TEXT DEFAULT 'Pending'
         )''')
         
-        # 4. Tabel Pledges
+        # 4. Tabel Pledges (Janji Donasi)
         db.execute('''CREATE TABLE IF NOT EXISTS pledges (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             campaign_id INTEGER,
             donor_id INTEGER,
+            donor_name TEXT,
+            donor_email TEXT,
+            donor_phone TEXT,
+            book_title TEXT,
+            book_qty INTEGER,
             shipping_date TEXT,
             shipping_method TEXT,
             book_condition TEXT,
@@ -229,6 +236,20 @@ def donatur_dashboard():
     campaigns = db.execute("SELECT * FROM campaigns WHERE status='Active' ORDER BY id DESC").fetchall()
     return render_template('donatur_dashboard.html', campaigns=campaigns)
 
+# >>> ROUTE BARU: DETAIL KAMPANYE DONATUR (Lihat Profil Dulu) <<<
+@app.route('/donatur/campaign/<int:campaign_id>')
+@login_required
+@role_required('donatur')
+def donatur_campaign_detail(campaign_id):
+    db = get_db()
+    campaign = db.execute('''
+        SELECT c.*, u.username as creator_name 
+        FROM campaigns c JOIN users u ON c.creator_id = u.id 
+        WHERE c.id = ?
+    ''', (campaign_id,)).fetchone()
+    
+    return render_template('donatur_campaign_detail.html', campaign=campaign)
+
 @app.route('/donatur/donate/<int:campaign_id>', methods=['GET', 'POST'])
 @login_required
 @role_required('donatur')
@@ -272,15 +293,21 @@ def donatur_form(campaign_id):
 def donatur_pledge(campaign_id):
     db = get_db()
     if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+        book_title = request.form['book_title']
+        book_qty = request.form['book_qty']
+        
         shipping_date = request.form['shipping_date']
         method = request.form['method']
         condition = request.form['condition']
         weight = request.form['weight']
         
         db.execute('''INSERT INTO pledges 
-            (campaign_id, donor_id, shipping_date, shipping_method, book_condition, estimated_weight) 
-            VALUES (?, ?, ?, ?, ?, ?)''',
-            (campaign_id, session['user_id'], shipping_date, method, condition, weight))
+            (campaign_id, donor_id, donor_name, donor_email, donor_phone, book_title, book_qty, shipping_date, shipping_method, book_condition, estimated_weight) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            (campaign_id, session['user_id'], name, email, phone, book_title, book_qty, shipping_date, method, condition, weight))
         db.commit()
         
         flash('Janji Donasi Berhasil Disimpan! Silakan kirim buku Anda sesuai jadwal.')
@@ -330,23 +357,20 @@ def kreator_create():
         deadline = request.form['deadline']
         desc = request.form['desc']
         target = float(request.form['target'])
-
-        # --- LOGIKA UPLOAD GAMBAR (BARU) ---
-        image_filename = None # Default kosong
         
-        # Cek apakah ada file yang diupload dengan name="image"
+        # MENYIMPAN BIO & INSTAGRAM (FITUR BARU)
+        creator_bio = request.form['creator_bio']
+        instagram_link = request.form['instagram_link']
+
+        image_filename = None
         if 'image' in request.files:
             file = request.files['image']
-            
-            # Jika user memilih file dan ekstensinya diizinkan
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                # Simpan file ke folder static/uploads
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                image_filename = filename # Simpan nama file untuk database
+                image_filename = filename
         
         try:
-            # 1. Deploy ke Blockchain
             target_wei = web3.to_wei(target, 'ether')
             tx_hash = contract.functions.createCampaign(target_wei).transact({
                 'from': session['wallet']
@@ -355,21 +379,38 @@ def kreator_create():
             
             blockchain_id = contract.functions.campaignCount().call()
             
-            # 2. Simpan ke Database
             db = get_db()
             db.execute('''INSERT INTO campaigns 
-                (blockchain_id, creator_id, title, description, category, location, deadline, image_filename, target_amount, status) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                (blockchain_id, session['user_id'], title, desc, category, location, deadline, image_filename, target, 'Active'))
+                (blockchain_id, creator_id, title, description, creator_bio, instagram_link, category, location, deadline, image_filename, target_amount, status) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (blockchain_id, session['user_id'], title, desc, creator_bio, instagram_link, category, location, deadline, image_filename, target, 'Pending'))
             db.commit()
             
-            flash('Kampanye Berhasil Diluncurkan dan Aktif!')
+            flash('Kampanye Berhasil Dibuat! Menunggu persetujuan Admin.')
             return redirect(url_for('kreator_dashboard'))
             
         except Exception as e:
             flash(f"Gagal deploy ke Blockchain: {e}")
             
     return render_template('kreator_create.html')
+
+@app.route('/kreator/campaign/<int:campaign_id>')
+@login_required
+@role_required('kreator')
+def kreator_campaign_detail(campaign_id):
+    db = get_db()
+    
+    campaign = db.execute('SELECT * FROM campaigns WHERE id = ? AND creator_id = ?', 
+                          (campaign_id, session['user_id'])).fetchone()
+    
+    if not campaign:
+        flash('Kampanye tidak ditemukan atau Anda tidak memiliki akses.')
+        return redirect(url_for('kreator_dashboard'))
+
+    donations = db.execute('SELECT * FROM donations WHERE campaign_id = ? ORDER BY id DESC', (campaign_id,)).fetchall()
+    pledges = db.execute('SELECT * FROM pledges WHERE campaign_id = ? ORDER BY id DESC', (campaign_id,)).fetchall()
+    
+    return render_template('kreator_campaign_detail.html', campaign=campaign, donations=donations, pledges=pledges)
 
 # --- 7. ROUTES ADMIN ---
 
@@ -381,6 +422,90 @@ def admin_dashboard():
     total_users = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
     total_campaigns = db.execute("SELECT COUNT(*) FROM campaigns").fetchone()[0]
     return render_template('admin_dashboard.html', total_donatur=total_users, total_campaigns=total_campaigns)
+
+@app.route('/admin/users')
+@login_required
+@role_required('admin')
+def admin_users():
+    db = get_db()
+    users = db.execute("SELECT id, username, role, wallet_address FROM users ORDER BY id DESC").fetchall()
+    return render_template('admin_users.html', users=users)
+
+@app.route('/admin/campaigns')
+@login_required
+@role_required('admin')
+def admin_campaigns():
+    db = get_db()
+    campaigns = db.execute('''
+        SELECT c.*, u.username as creator_name 
+        FROM campaigns c 
+        JOIN users u ON c.creator_id = u.id 
+        ORDER BY c.id DESC
+    ''').fetchall()
+    return render_template('admin_campaigns.html', campaigns=campaigns)
+
+@app.route('/admin/campaign/status/<int:campaign_id>/<action>')
+@login_required
+@role_required('admin')
+def admin_campaign_status(campaign_id, action):
+    db = get_db()
+    new_status = 'Pending'
+    
+    if action == 'approve':
+        new_status = 'Active'
+        msg = 'Kampanye disetujui dan sekarang Aktif!'
+    elif action == 'reject':
+        new_status = 'Rejected'
+        msg = 'Kampanye ditolak.'
+    else:
+        return redirect(url_for('admin_campaigns'))
+        
+    db.execute("UPDATE campaigns SET status = ? WHERE id = ?", (new_status, campaign_id))
+    db.commit()
+    
+    flash(msg)
+    return redirect(url_for('admin_campaigns'))
+
+# >>> ADMIN DETAIL KAMPANYE (LOGISTIK) <<<
+
+@app.route('/admin/campaign/<int:campaign_id>')
+@login_required
+@role_required('admin')
+def admin_campaign_detail(campaign_id):
+    db = get_db()
+    campaign = db.execute('''
+        SELECT c.*, u.username as creator_name, u.wallet_address 
+        FROM campaigns c JOIN users u ON c.creator_id = u.id 
+        WHERE c.id = ?
+    ''', (campaign_id,)).fetchone()
+    
+    donations = db.execute('''
+        SELECT * FROM donations WHERE campaign_id = ? ORDER BY id DESC
+    ''', (campaign_id,)).fetchall()
+    
+    pledges = db.execute('''
+        SELECT * FROM pledges WHERE campaign_id = ? ORDER BY id DESC
+    ''', (campaign_id,)).fetchall()
+    
+    return render_template('admin_campaign_detail.html', campaign=campaign, donations=donations, pledges=pledges)
+
+@app.route('/admin/logistics/update/<string:type>/<int:id>/<string:status>')
+@login_required
+@role_required('admin')
+def update_logistics(type, id, status):
+    db = get_db()
+    
+    if type == 'donation':
+        db.execute("UPDATE donations SET shipping_status = ? WHERE id = ?", (status, id))
+        camp_id = db.execute("SELECT campaign_id FROM donations WHERE id=?", (id,)).fetchone()[0]
+    elif type == 'pledge':
+        db.execute("UPDATE pledges SET status = ? WHERE id = ?", (status, id))
+        camp_id = db.execute("SELECT campaign_id FROM pledges WHERE id=?", (id,)).fetchone()[0]
+        
+    db.commit()
+    flash(f'Status logistik berhasil diperbarui menjadi: {status}')
+    
+    return redirect(url_for('admin_campaign_detail', campaign_id=camp_id))
 
 if __name__ == '__main__':
     init_db()

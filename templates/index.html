@@ -4,20 +4,12 @@
 
 <div class="d-flex align-items-center justify-content-center text-center" 
      style="min-height: 85vh; padding-top: 80px; position: relative;">
+    
+    <div class="position-absolute w-100 h-100 hero-bg-static">
+    </div>
+
     <div class="position-absolute w-100 h-100" 
-         style="
-            background: 
-                linear-gradient(
-                    rgba(0, 0, 0, 0.55),
-                    rgba(0, 0, 0, 0.85)
-                ),
-                url('https://images.unsplash.com/photo-1535905557558-afc4877a26fc?auto=format&fit=crop&w=1500&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            opacity: 0.55;
-            filter: blur(1.5px);
-         ">
+         style="background: rgba(0, 0, 0, 0.7); z-index: 1;">
     </div>
 
     <div class="container position-relative z-2">
@@ -26,29 +18,39 @@
         </h1>
         
         <p class="lead text-light mb-5 mx-auto col-md-10" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8); opacity: 0.9;">
-            DeBOOKS merupakan platform donasi buku terdesentralisasi yang didedikasikan untuk meningkatkan minat baca masyarakat Indonesia. Mengingat masih banyak masyarakat, khususnya anak-anak, yang kurang dalam minat membaca karena keterbatasan fasilitas seperti perpustakaan, website ini hadir sebagai solusi penyaluran buku yang transparan dan terpercaya.
+            DeBOOKS adalah platform inovatif yang menyalurkan donasi buku ke seluruh Indonesia. Kami menggunakan teknologi Blockchain untuk memastikan setiap buku yang Anda sumbangkan tercatat permanen dan tereksekusi dengan transparan, dari Donatur hingga penerima akhir.
         </p>
         
         <div class="d-flex justify-content-center gap-3">
             {% if session.get('user_id') %}
+                
+                {# TAMPILAN KREATOR #}
                 {% if session['role'] == 'kreator' %}
                     <a href="/kreator/dashboard" class="btn btn-netflix btn-lg px-5 shadow-lg">
                         <i class="fas fa-plus-circle me-2"></i> Buat Kampanye
                     </a>
+                
+                {# TAMPILAN ADMIN #}
+                {% elif session['role'] == 'admin' %}
+                    <a href="/admin/dashboard" class="btn btn-danger btn-lg px-5 shadow-lg">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard Admin
+                    </a>
+
+                {# TAMPILAN DONATUR #}
                 {% else %}
                     <a href="#campaign-list" class="btn btn-netflix btn-lg px-5 shadow-lg">
                         <i class="fas fa-book-open me-2"></i> Mulai Donasi
                     </a>
                 {% endif %}
+
+            {# TAMPILAN BELUM LOGIN #}
             {% else %}
                 <a href="/login" class="btn btn-netflix btn-lg px-5 shadow-lg">
                     Mulai Sekarang
                 </a>
             {% endif %}
             
-            <a href="#about" class="btn btn-outline-light btn-lg px-4" style="backdrop-filter: blur(5px);">
-                <i class="fas fa-info-circle me-2"></i> Pelajari
-            </a>
+            {# TOMBOL "PELAJARI" DIHAPUS DARI SINI #}
         </div>
     </div>
 </div>
@@ -76,7 +78,7 @@
                  style="background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                 <i class="fas fa-user-shield text-danger mb-3" style="font-size: 2.5rem;"></i>
                 <h4 class="fw-bold">Terverifikasi</h4>
-                <p class="text-white-50 small mb-0">Kreator dan kampanye diverifikasi untuk mencegah penipuan penggalangan dana.</p>
+                <p class="text-white-50 small mb-0">Kreator dan kampanye diverifikasi untuk mencegah penipuan.</p>
             </div>
         </div>
     </div>
@@ -84,43 +86,54 @@
 
 <div id="campaign-list" class="py-5" style="background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-4">
+        
+        <div class="d-flex justify-content-between align-items-end mb-5 border-bottom border-secondary border-opacity-25 pb-4">
             <div>
-                <h6 class="text-danger fw-bold text-uppercase ls-2">Trending Now</h6>
-                <h2 class="fw-bold text-white">Bantu Mereka Membaca</h2>
+                <h6 class="text-danger fw-bold text-uppercase ls-2 mb-2">
+                    <i class="fas fa-fire me-1"></i> Trending Now
+                </h6>
+                <h2 class="display-5 fw-bold text-white m-0">Bantu Mereka Membaca</h2>
             </div>
-            <a href="#" class="text-white-50 text-decoration-none hover-white">Lihat Semua <i class="fas fa-arrow-right ms-1"></i></a>
+            
+            <a href="/donatur/dashboard" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold small hover-scale d-flex align-items-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);">
+                <span>Lihat Semua</span> 
+                <i class="fas fa-arrow-right ms-2"></i>
+            </a>
         </div>
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
             {% for camp in campaigns %}
             <div class="col">
-                <a href="{% if session.get('role') == 'donatur' %}/donatur/donate/{{ camp.id }}{% else %}/login{% endif %}" class="text-decoration-none text-white">
-                    <div class="campaign-card h-100 d-flex flex-column">
+                
+                <a href="{% if session.get('role') == 'donatur' %}/donatur/campaign/{{ camp.id }}{% elif session.get('role') == 'admin' %}/admin/campaign/{{ camp.id }}{% else %}/login{% endif %}" class="text-decoration-none text-white">
+                    
+                    <div class="campaign-card h-100 d-flex flex-column hover-scale-card transition-all">
                         <div class="position-relative">
                             
                             {% if camp.image_filename %}
                                 <img src="{{ url_for('static', filename='uploads/' ~ camp.image_filename) }}" 
                                      class="card-img-top" 
-                                     style="height: 180px; object-fit: cover;"
+                                     style="height: 180px; object-fit: cover; border-radius: 12px 12px 0 0;"
                                      alt="{{ camp.title }}">
                             {% else %}
-                                <div class="card-img-top d-flex align-items-center justify-content-center bg-secondary" style="height: 180px;">
+                                <div class="card-img-top d-flex align-items-center justify-content-center bg-secondary" style="height: 180px; border-radius: 12px 12px 0 0;">
                                     <i class="fas fa-image text-white-50 fa-2x"></i>
                                 </div>
                             {% endif %}
+                            
                             <div class="position-absolute top-0 end-0 m-2">
-                                <span class="badge bg-black bg-opacity-75 backdrop-blur">Active</span>
+                                <span class="badge bg-black bg-opacity-75 backdrop-blur px-3 py-1 rounded-pill">Active</span>
                             </div>
                         </div>
-                        <div class="p-3 d-flex flex-column flex-grow-1">
-                            <h5 class="fw-bold mb-2">{{ camp.title }}</h5>
-                            <p class="text-white-50 small mb-3 flex-grow-1">{{ camp.description[:60] }}...</p>
+                        
+                        <div class="p-3 d-flex flex-column flex-grow-1 bg-dark bg-opacity-50 border border-secondary border-opacity-25 border-top-0" style="border-radius: 0 0 12px 12px;">
+                            <h5 class="fw-bold mb-2 text-truncate">{{ camp.title }}</h5>
+                            <p class="text-white-50 small mb-3 flex-grow-1 line-clamp-3">{{ camp.description }}</p>
                             
-                            <div class="progress" style="height: 4px; background-color: rgba(255,255,255,0.1);">
+                            <div class="progress mb-2" style="height: 4px; background-color: rgba(255,255,255,0.1);">
                                 <div class="progress-bar bg-danger" role="progressbar" style="width: 45%;"></div>
                             </div>
-                            <div class="d-flex justify-content-between mt-2 small">
+                            <div class="d-flex justify-content-between small">
                                 <span class="text-success fw-bold">{{ camp.target_amount }} ETH</span>
                                 <span class="text-muted">Target</span>
                             </div>
@@ -148,12 +161,36 @@
                 DeBOOKS menggabungkan keindahan literasi dengan ketangguhan teknologi Blockchain. 
                 Kami percaya bahwa transparansi adalah kunci untuk meningkatkan partisipasi publik dalam donasi.
             </p>
-            <ul class="list-unstyled text-white-50">
-                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Smart Contract Verification</li>
-                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Real-time Transaction Tracking</li>
-                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Secure Wallet Integration</li>
-            </ul>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-white fw-bold mt-4 mb-3"><i class="fas fa-share-alt me-2 text-danger"></i> Media Sosial</h5>
+                    <ul class="list-unstyled text-white-50">
+                        <li class="mb-2">
+                            <a href="https://www.instagram.com/tim.cikini/?hl=id" target="_blank" class="text-white-50 text-decoration-none hover-white">
+                                <i class="fab fa-instagram text-danger me-2"></i> Instagram (@debooks_id)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-white fw-bold mt-4 mb-3"><i class="fas fa-headset me-2 text-info"></i> Hubungi Kami</h5>
+                    <ul class="list-unstyled text-white-50">
+                         <li class="mb-2">
+                            <a href="https://wa.me/628123456789?text=Halo%20DeBOOKS%2C%20saya%20tertarik%20untuk%20berdonasi%20buku%20dari%20website." target="_blank" class="text-white-50 text-decoration-none hover-white">
+                                <i class="fab fa-whatsapp text-success me-2"></i> WhatsApp (CS DeBOOKS)
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="https://ig.me/m/tim.cikini/?hl=id" target="_blank" class="text-white-50 text-decoration-none hover-white">
+                                <i class="fab fa-instagram text-danger me-2"></i> Direct Message (Instagram)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
+        
         <div class="col-lg-6">
             <div class="position-relative">
                 <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
@@ -163,5 +200,48 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* CSS UNTUK BACKGROUND STATIC HERO (MEMASTIKAN GAMBAR MUNCUL) */
+    .hero-bg-static {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* URL Gambar Perpustakaan Stabil */
+        background-image: url('https://images.unsplash.com/photo-1535905557558-afc4877a26fc?auto=format&fit=crop&w=1500&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        opacity: 0.55;
+        filter: blur(1.5px);
+        z-index: 0;
+    }
+
+    .hover-scale:hover {
+        transform: scale(1.05);
+        background: rgba(255,255,255,0.1) !important;
+        border-color: rgba(255,255,255,0.5) !important;
+        color: white !important;
+        transition: all 0.3s ease;
+    }
+    
+    .hover-scale-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+    .transition-all { transition: all 0.3s ease; }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .backdrop-blur { backdrop-filter: blur(4px); }
+    .ls-2 { letter-spacing: 2px; }
+    .hover-white:hover { color: white !important; }
+</style>
 
 {% endblock %}

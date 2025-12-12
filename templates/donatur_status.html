@@ -1,31 +1,219 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <h3>📦 Riwayat Donasi Saya</h3>
-    <table class="table table-dark table-hover mt-3">
-        <thead>
-            <tr>
-                <th>Kampanye</th>
-                <th>Detail Buku</th>
-                <th>Status Pengiriman</th>
-                <th>Blockchain ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in donations %}
-            <tr>
-                <td>{{ item.title }}</td>
-                <td>{{ item.book_details }}</td>
-                <td>
-                    <span class="badge bg-warning text-dark">{{ item.shipping_status }}</span>
-                </td>
-                <td class="font-monospace text-success">#BLOCK-{{ item.blockchain_id }}</td>
-            </tr>
-            {% else %}
-            <tr><td colspan="4" class="text-center">Belum ada donasi.</td></tr>
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 100px; padding-bottom: 80px; z-index: 2;">
+
+    <div class="text-center mb-5">
+        <div class="d-inline-block p-2 px-4 rounded-pill bg-dark bg-opacity-50 border border-secondary mb-3 backdrop-blur">
+            <h6 class="text-danger text-uppercase ls-2 fw-bold m-0" style="letter-spacing: 2px;">Jejak Kebaikan</h6>
+        </div>
+        <h2 class="display-5 fw-bold text-white mb-3" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">Status Distribusi Buku</h2>
+        <p class="text-white-50 col-md-8 mx-auto fs-5">
+            Pantau posisi buku Anda. Kami memastikan setiap buku yang Anda titipkan di 
+            gudang kami akan disalurkan dengan aman kepada Kreator yang membutuhkan.
+        </p>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show shadow-lg border-0 mb-4 bg-success bg-opacity-75 text-white" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> {{ message }}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endfor %}
-        </tbody>
-    </table>
+        {% endif %}
+    {% endwith %}
+
+    <div class="row g-5">
+        
+        <div class="col-lg-6">
+            <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-50">
+                <span class="fa-stack me-3">
+                    <i class="fas fa-circle fa-stack-2x text-danger opacity-25"></i>
+                    <i class="fas fa-box fa-stack-1x text-danger"></i>
+                </span>
+                <div>
+                    <h4 class="text-white fw-bold m-0">Posisi Buku</h4>
+                    <small class="text-white-50">Tracking dari Gudang Admin ke Kreator</small>
+                </div>
+            </div>
+
+            {% if donations %}
+                <div class="d-flex flex-column gap-3">
+                    {% for item in donations %}
+                    <div class="glass-panel p-4 rounded position-relative overflow-hidden border border-secondary border-opacity-25 shadow-lg">
+                        
+                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                            {% if item.shipping_status == 'Pending' %}
+                                <span class="badge bg-warning text-dark shadow-sm rounded-pill px-3">
+                                    <i class="fas fa-warehouse me-1"></i> Disimpan di Gudang
+                                </span>
+                            {% elif item.shipping_status == 'Shipped' %}
+                                <span class="badge bg-info text-dark shadow-sm rounded-pill px-3">
+                                    <i class="fas fa-plane-departure me-1"></i> Pengiriman ke Kreator
+                                </span>
+                            {% elif item.shipping_status == 'Received' %}
+                                <span class="badge bg-success shadow-sm rounded-pill px-3">
+                                    <i class="fas fa-check-double me-1"></i> Diterima Kreator
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary rounded-pill px-3">{{ item.shipping_status }}</span>
+                            {% endif %}
+                        </div>
+
+                        <h5 class="text-white fw-bold mb-1 pe-5">{{ item.campaign_title }}</h5>
+                        
+                        <div class="text-white-50 small mb-3 mt-2">
+                            <i class="fas fa-book me-2 text-danger"></i> 
+                            {{ item.book_title }} <span class="text-white fw-bold">({{ item.book_qty }} Pcs)</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-end p-3 rounded bg-black bg-opacity-25 border border-white border-opacity-10">
+                            <div>
+                                <small class="d-block text-secondary font-monospace" style="font-size: 0.7rem;">BLOCKCHAIN ID</small>
+                                <span class="text-white small font-monospace">
+                                    {% if item.blockchain_id %} 
+                                        <i class="fab fa-ethereum me-1 text-secondary"></i>{{ item.blockchain_id[:10] }}...
+                                    {% else %} 
+                                        <span class="text-muted fst-italic">Waiting hash...</span> 
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="text-end">
+                                <small class="d-block text-secondary" style="font-size: 0.7rem;">STATUS TERKINI</small>
+                                <span class="text-white small fw-bold">
+                                    {% if item.shipping_status == 'Pending' %}
+                                        Menunggu Kirim
+                                    {% elif item.shipping_status == 'Shipped' %}
+                                        Sedang Jalan
+                                    {% else %}
+                                        Selesai
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5 glass-panel rounded border border-dashed border-secondary opacity-75">
+                    <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i>
+                    <p class="text-white-50 m-0">Belum ada buku yang didonasikan.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-6">
+            <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-50">
+                <span class="fa-stack me-3">
+                    <i class="fas fa-circle fa-stack-2x text-info opacity-25"></i>
+                    <i class="fas fa-hand-holding-heart fa-stack-1x text-info"></i>
+                </span>
+                <div>
+                    <h4 class="text-white fw-bold m-0">Janji Pengiriman Anda</h4>
+                    <small class="text-white-50">Rencana penyerahan buku ke Admin</small>
+                </div>
+            </div>
+
+            {% if pledges %}
+                <div class="d-flex flex-column gap-3">
+                    {% for p in pledges %}
+                    <div class="glass-panel p-4 rounded position-relative overflow-hidden border border-secondary border-opacity-25 shadow-lg">
+                        
+                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                            <span class="badge border border-info text-info bg-dark bg-opacity-50 rounded-pill px-3">
+                                {{ p.status }}
+                            </span>
+                        </div>
+
+                        <h5 class="text-white fw-bold mb-1">{{ p.campaign_title }}</h5>
+                        <div class="text-white-50 small mb-3 mt-2">
+                            <i class="fas fa-calendar-alt me-2 text-info"></i> Rencana Serah Terima: <span class="text-white fw-bold">{{ p.shipping_date }}</span>
+                        </div>
+
+                        <div class="row g-2 small text-white-50">
+                            <div class="col-6">
+                                <div class="p-2 rounded bg-black bg-opacity-25 border border-white border-opacity-10 text-center">
+                                    <i class="fas fa-truck me-1 text-secondary"></i> {{ p.shipping_method }}
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-2 rounded bg-black bg-opacity-25 border border-white border-opacity-10 text-center">
+                                    <i class="fas fa-weight-hanging me-1 text-secondary"></i> Est. {{ p.estimated_weight }} Kg
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 pt-2 text-center border-top border-white border-opacity-10">
+                            <small class="text-white-50 fst-italic" style="font-size: 0.75rem;">
+                                "Silakan antar buku ke Drop Point DeBOOKS sesuai jadwal."
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5 glass-panel rounded border border-dashed border-secondary opacity-75">
+                    <i class="fas fa-clipboard-list fa-3x mb-3 text-secondary"></i>
+                    <p class="text-white-50 m-0">Belum ada janji donasi dibuat.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
 </div>
+
+<style>
+    /* Mengatur Background Perpustakaan */
+    .page-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* URL Gambar Perpustakaan yang moody dan estetik */
+        background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2128&auto=format&fit=crop'); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: 0;
+    }
+
+    /* Mengatur Overlay Gelap agar tulisan terbaca */
+    .page-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.95));
+        backdrop-filter: blur(4px); /* Efek blur pada background asli */
+        z-index: 1;
+    }
+
+    /* Modifikasi Glass Panel agar lebih transparan dan elegan */
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.55); /* Lebih transparan */
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1); /* Border tipis halus */
+        transition: all 0.3s ease;
+    }
+
+    .glass-panel:hover {
+        transform: translateY(-5px);
+        background: rgba(40, 40, 40, 0.70);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        border-color: rgba(255,255,255,0.25) !important;
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(5px);
+    }
+</style>
 {% endblock %}

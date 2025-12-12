@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-bg"></div>
+<div class="page-overlay"></div>
+
+<div class="container position-relative" style="padding-top: 110px; padding-bottom: 100px; z-index: 2;">
+
+    <div class="mb-4">
+        <a href="/donatur/dashboard" class="text-white-50 text-decoration-none hover-scale">
+            <i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard
+        </a>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <div class="glass-panel p-3 rounded-4 border border-secondary border-opacity-25 shadow-lg mb-4 position-sticky" style="top: 120px;">
+                <div class="rounded-3 overflow-hidden mb-3 position-relative" style="height: 350px;">
+                    {% if campaign.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ campaign.image_filename) }}" class="w-100 h-100 object-fit-cover">
+                    {% else %}
+                        <div class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-book-open fa-4x text-white-50"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <span class="badge bg-danger shadow-sm text-uppercase ls-1">{{ campaign.category }}</span>
+                    </div>
+                </div>
+
+                <h2 class="fw-bold text-white mb-2">{{ campaign.title }}</h2>
+                <div class="d-flex align-items-center text-white-50 mb-4 small">
+                    <span class="me-3"><i class="fas fa-map-marker-alt text-danger me-1"></i> {{ campaign.location }}</span>
+                    <span><i class="far fa-clock text-info me-1"></i> Berakhir: {{ campaign.deadline }}</span>
+                </div>
+
+                <div class="p-3 bg-black bg-opacity-25 rounded border border-secondary border-opacity-25">
+                    <p class="text-white-50 small mb-1">Target Donasi</p>
+                    <h3 class="text-success fw-bold m-0">{{ campaign.target_amount }} ETH</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            
+            <div class="glass-panel p-4 p-md-5 rounded-4 border border-secondary border-opacity-25 shadow-lg mb-5">
+                <div class="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                    <div class="bg-info bg-opacity-10 p-3 rounded-circle me-3">
+                        <i class="fas fa-user-circle text-info fa-2x"></i>
+                    </div>
+                    <div>
+                        <small class="text-info fw-bold text-uppercase ls-1">Kreator</small>
+                        <h4 class="text-white fw-bold m-0">{{ campaign.creator_name }}</h4>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="text-white fw-bold mb-3">Deskripsi Kreator</h5>
+                    <p class="text-white-50" style="line-height: 1.8; text-align: justify;">
+                        "{{ campaign.creator_bio }}"
+                    </p>
+                </div>
+
+                {% if campaign.instagram_link %}
+                <a href="https://instagram.com/{{ campaign.instagram_link }}" target="_blank" class="btn btn-outline-light rounded-pill px-4">
+                    <i class="fab fa-instagram me-2"></i> Kunjungi Instagram
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="glass-panel p-4 p-md-5 rounded-4 border border-secondary border-opacity-25 shadow-lg mb-5">
+                <h5 class="text-white fw-bold border-bottom border-secondary border-opacity-25 pb-3 mb-4">
+                    <i class="fas fa-book-reader me-2 text-warning"></i> Cerita & Tujuan
+                </h5>
+                <div class="text-white-50" style="line-height: 1.8; white-space: pre-wrap;">{{ campaign.description }}</div>
+            </div>
+
+            <div id="donate-section" class="p-4 p-md-5 rounded-4 shadow-lg text-center position-relative overflow-hidden" 
+                 style="background: rgba(30, 81, 57, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2);">
+                
+                <div class="position-absolute top-0 end-0 w-50 h-100" 
+                     style="background: radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent 70%); pointer-events: none;">
+                </div>
+                
+                <h3 class="fw-bold text-white mb-2 position-relative z-1">Siap Membantu?</h3>
+                <p class="text-white-50 mb-4 position-relative z-1">Pilih cara Anda ingin berkontribusi untuk kampanye ini.</p>
+
+                <div class="row g-3 position-relative z-1">
+                    <div class="col-md-6">
+                        <a href="/donatur/donate/{{ campaign.id }}" class="btn btn-netflix w-100 py-3 fw-bold shadow-lg hover-scale">
+                            <i class="fas fa-bolt me-2"></i> Donasi Langsung
+                        </a>
+
+                        </small>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/donatur/pledge/{{ campaign.id }}" class="btn btn-outline-light w-100 py-3 fw-bold hover-scale">
+                            <i class="fas fa-hand-holding-heart me-2"></i> Janji Donasi
+                        </a>
+
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .page-bg {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2228&auto=format&fit=crop'); 
+        background-size: cover; background-position: center; z-index: 0;
+    }
+    .page-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), rgba(20, 20, 20, 0.95));
+        backdrop-filter: blur(4px); z-index: 1;
+    }
+    .glass-panel {
+        background: rgba(30, 30, 30, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .object-fit-cover { object-fit: cover; }
+    .ls-1 { letter-spacing: 1px; }
+    .hover-scale:hover { transform: scale(1.02); transition: 0.2s; }
+    .btn-netflix { background-color: var(--netflix-red); color: white; border: none; }
+    .btn-netflix:hover { background-color: #b20710; color: white; }
+    .rounded-4 { border-radius: 1rem !important; }
+</style>
+
+{% endblock %}
