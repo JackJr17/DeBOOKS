@@ -419,9 +419,20 @@ def kreator_campaign_detail(campaign_id):
 @role_required('admin')
 def admin_dashboard():
     db = get_db()
+
     total_users = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
     total_campaigns = db.execute("SELECT COUNT(*) FROM campaigns").fetchone()[0]
-    return render_template('admin_dashboard.html', total_donatur=total_users, total_campaigns=total_campaigns)
+
+    pending_campaigns = db.execute(
+        "SELECT COUNT(*) FROM campaigns WHERE status = 'Pending'"
+    ).fetchone()[0]
+
+    return render_template(
+        'admin_dashboard.html',
+        total_donatur=total_users,
+        total_campaigns=total_campaigns,
+        pending_campaigns=pending_campaigns
+    )
 
 @app.route('/admin/users')
 @login_required
