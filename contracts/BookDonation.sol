@@ -53,20 +53,19 @@ contract BookDonation {
         emit CampaignCreated(campaignCount, msg.sender, _targetAmount);
     }
 
-function approveCampaignAndPay(uint _campaignId) public {
-    require(msg.sender == owner, "Bukan admin");
+    function approveCampaignAndPay(uint _campaignId) public {
+        require(msg.sender == owner, "Bukan admin");
 
-    Campaign storage c = campaigns[_campaignId];
+        Campaign storage c = campaigns[_campaignId];
+        require(c.isOpen, "Campaign invalid");
 
-    require(c.isOpen, "Campaign invalid");
+        // ⛔ cegah approve ulang
+        c.isOpen = false;
 
-    // ⛔ Cegah approve ulang
-    c.isOpen = false;
-
-    // ✅ Transfer fee dari CONTRACT ke ADMIN
-    payable(owner).transfer(campaignFee);
-}
-
+        // ✅ transfer fee ke admin (CALL, bukan transfer)
+        (bool success, ) = payable(owner).call{value: campaignFee}("");
+        require(success, "Fee transfer failed");
+    }
 
     // ⛔ DONATE TETAP
     function donate(uint _campaignId, string memory _bookDetails) public payable {
@@ -91,6 +90,10 @@ function approveCampaignAndPay(uint _campaignId) public {
 
     function withdrawFees() public {
         require(msg.sender == owner, "Bukan admin");
-        payable(owner).transfer(address(this).balance);
+
+        uint amount = address(this).balance;
+
+        (bool success, ) = payable(owner).call{value: amount}("");
+        require(success, "Withdraw failed");
     }
 }

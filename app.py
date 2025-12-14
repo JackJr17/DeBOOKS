@@ -508,6 +508,68 @@ def admin_campaign_detail(campaign_id):
     
     return render_template('admin_campaign_detail.html', campaign=campaign, donations=donations, pledges=pledges)
 
+# ===============================
+# ADMIN APPROVE / REJECT CAMPAIGN
+# ===============================
+@app.route('/admin/campaign/status/<int:campaign_id>/<string:action>')
+@login_required
+@role_required('admin')
+def admin_campaign_status(campaign_id, action):
+    db = get_db()
+
+    campaign = db.execute(
+        "SELECT * FROM campaigns WHERE id = ?",
+        (campaign_id,)
+    ).fetchone()
+
+    if not campaign:
+        flash('Campaign tidak ditemukan')
+        return redirect(url_for('admin_campaigns'))
+
+    # ===============================
+    # APPROVE
+    # ===============================
+    if action == 'approve':
+        try:
+            # Call smart contract approve
+            tx_hash = contract.functions.approveCampaignAndPay(
+                campaign['blockchain_id']
+            ).transact({
+                'from': session['wallet']
+            })
+
+            web3.eth.wait_for_transaction_receipt(tx_hash)
+
+            # Update DB
+            db.execute(
+                "UPDATE campaigns SET status = 'Active' WHERE id = ?",
+                (campaign_id,)
+            )
+            db.commit()
+
+            flash('Campaign berhasil DISETUJUI & diaktifkan')
+
+        except Exception as e:
+            flash(f'Gagal approve campaign: {e}')
+
+    # ===============================
+    # REJECT
+    # ===============================
+    elif action == 'reject':
+        db.execute(
+            "UPDATE campaigns SET status = 'Rejected' WHERE id = ?",
+            (campaign_id,)
+        )
+        db.commit()
+
+        flash('Campaign berhasil DITOLAK')
+
+    else:
+        flash('Aksi tidak valid')
+
+    return redirect(url_for('admin_campaign_detail', campaign_id=campaign_id))
+
+
 @app.route('/admin/logistics/update/<string:type>/<int:id>/<string:status>')
 @login_required
 @role_required('admin')
@@ -529,3 +591,5 @@ def update_logistics(type, id, status):
 if __name__ == '__main__':
     init_db()
     app.run(debug=True, port=5000)
+
+print("Contract address:", contract.address)
