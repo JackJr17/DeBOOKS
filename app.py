@@ -28,6 +28,12 @@ def allowed_file(filename):
 ganache_url = "http://127.0.0.1:7545"
 web3 = Web3(Web3.HTTPProvider(ganache_url))
 
+if not web3.is_connected():
+    print("⚠️ WARNING: Ganache tidak terhubung")
+else:
+    print("✅ Ganache terhubung")
+
+
 def load_contract():
     try:
         with open('build/contracts/BookDonation.json') as f:
@@ -44,6 +50,12 @@ def load_contract():
         return None
 
 contract = load_contract()
+
+if contract is None:
+    print("⚠️ WARNING: Smart contract belum ter-load")
+else:
+    print("✅ Smart contract siap digunakan")
+
 
 # --- 2. DATABASE SETUP ---
 DATABASE = 'debooks.db'
@@ -126,10 +138,11 @@ def init_db():
         check = db.execute("SELECT * FROM users WHERE username='admin'").fetchone()
         if not check:
             pw_hash = generate_password_hash('admin123')
-            wallet_address = "0x0000000000000000000000000000000000000000"
+            wallet_address = "0xe6313e6aAf3ac43F951bE89EeF70FBA42f201Be9"
             if web3.is_connected():
                 acct = web3.eth.account.create()
-                wallet_address = acct.address
+                wallet_address = "0xe6313e6aAf3ac43F951bE89EeF70FBA42f201Be9"
+
                 
             db.execute("INSERT INTO users (username, password, role, wallet_address) VALUES (?, ?, ?, ?)",
                        ('admin', pw_hash, 'admin', wallet_address))
@@ -168,9 +181,15 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        wallet = request.form['wallet_address']
         
         db = get_db()
-        user = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        
+        user = db.execute(
+    "SELECT * FROM users WHERE username = ? AND wallet_address = ?",
+    (username, wallet)
+).fetchone()
+
         
         if user and check_password_hash(user['password'], password):
             session['user_id'] = user['id']
@@ -192,33 +211,35 @@ def register():
         username = request.form['username']
         password = request.form['password']
         role = request.form['role']
-        
-        if web3.is_connected():
-            available_accounts = web3.eth.accounts
-            wallet = random.choice(available_accounts)
-        else:
-            wallet = "0x0000000000000000000000000000000000000000"
+        wallet = request.form['wallet_address']   # ⬅️ SATU-SATUNYA PERUBAHAN
 
         db = get_db()
         error = None
 
-        if not username: error = 'Username wajib diisi.'
-        elif not password: error = 'Password wajib diisi.'
-        elif db.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone() is not None:
+        if not username:
+            error = 'Username wajib diisi.'
+        elif not password:
+            error = 'Password wajib diisi.'
+        elif not web3.is_address(wallet):
+            error = 'Wallet address tidak valid.'
+        elif db.execute(
+            'SELECT id FROM users WHERE username = ?',
+            (username,)
+        ).fetchone() is not None:
             error = f"Username '{username}' sudah dipakai."
 
         if error is None:
             hashed_pw = generate_password_hash(password)
-            try:
-                db.execute("INSERT INTO users (username, password, role, wallet_address) VALUES (?, ?, ?, ?)",
-                           (username, hashed_pw, role, wallet))
-                db.commit()
-                flash(f'Berhasil! Menggunakan Wallet Ganache: {wallet[:6]}...')
-                return redirect(url_for('login'))
-            except Exception as e:
-                error = f"Database error: {e}"
+            db.execute(
+                "INSERT INTO users (username, password, role, wallet_address) VALUES (?, ?, ?, ?)",
+                (username, hashed_pw, role, wallet)
+            )
+            db.commit()
+            flash(f'Registrasi berhasil! Wallet: {wallet[:6]}...')
+            return redirect(url_for('login'))
+
         flash(error)
-        
+
     return render_template('register.html')
 
 @app.route('/logout')
@@ -271,6 +292,9 @@ def donatur_form(campaign_id):
                 'from': session['wallet'],
                 'value': amount_wei
             })
+
+            web3.eth.wait_for_transaction_receipt(tx_hash)
+
             
             db.execute('''INSERT INTO donations 
                 (campaign_id, donor_id, donor_name, donor_email, donor_phone, book_title, book_qty, book_details) 
