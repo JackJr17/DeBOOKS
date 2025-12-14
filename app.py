@@ -50,6 +50,7 @@ def load_contract():
         return None
 
 contract = load_contract()
+print("CONTRACT LOADED:", contract)
 
 if contract is None:
     print("⚠️ WARNING: Smart contract belum ter-load")
@@ -138,10 +139,8 @@ def init_db():
         check = db.execute("SELECT * FROM users WHERE username='admin'").fetchone()
         if not check:
             pw_hash = generate_password_hash('admin123')
+
             wallet_address = "0xe6313e6aAf3ac43F951bE89EeF70FBA42f201Be9"
-            if web3.is_connected():
-                acct = web3.eth.account.create()
-                wallet_address = "0xe6313e6aAf3ac43F951bE89EeF70FBA42f201Be9"
 
                 
             db.execute("INSERT INTO users (username, password, role, wallet_address) VALUES (?, ?, ?, ?)",
@@ -396,9 +395,14 @@ def kreator_create():
         
         try:
             target_wei = web3.to_wei(target, 'ether')
-            tx_hash = contract.functions.createCampaign(target_wei).transact({
-                'from': session['wallet']
+
+            campaign_fee_wei = web3.to_wei(0.01, 'ether')
+            
+            tx_hash = contract.functions.createCampaignPaid(target_wei).transact({
+                'from': session['wallet'],
+                'value': campaign_fee_wei
             })
+
             web3.eth.wait_for_transaction_receipt(tx_hash)
             
             blockchain_id = contract.functions.campaignCount().call()
@@ -479,27 +483,7 @@ def admin_campaigns():
     ''').fetchall()
     return render_template('admin_campaigns.html', campaigns=campaigns)
 
-@app.route('/admin/campaign/status/<int:campaign_id>/<action>')
-@login_required
-@role_required('admin')
-def admin_campaign_status(campaign_id, action):
-    db = get_db()
-    new_status = 'Pending'
-    
-    if action == 'approve':
-        new_status = 'Active'
-        msg = 'Kampanye disetujui dan sekarang Aktif!'
-    elif action == 'reject':
-        new_status = 'Rejected'
-        msg = 'Kampanye ditolak.'
-    else:
-        return redirect(url_for('admin_campaigns'))
-        
-    db.execute("UPDATE campaigns SET status = ? WHERE id = ?", (new_status, campaign_id))
-    db.commit()
-    
-    flash(msg)
-    return redirect(url_for('admin_campaigns'))
+
 
 # >>> ADMIN DETAIL KAMPANYE (LOGISTIK) <<<
 
