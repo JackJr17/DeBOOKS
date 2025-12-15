@@ -2,190 +2,172 @@
 
 {% block content %}
 
-<div class="page-bg"></div>
-<div class="page-overlay"></div>
+<div class="page-wrapper">
 
-<div class="container position-relative" style="padding-top: 120px; padding-bottom: 80px; z-index: 2;">
+    <!-- Background -->
+    <div class="page-bg"></div>
+    <div class="page-overlay"></div>
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5 border-bottom border-secondary border-opacity-50 pb-4">
-        <div class="mb-3 mb-md-0">
-            <span class="badge bg-info bg-opacity-75 mb-2 px-3 py-2 rounded-pill shadow-sm">
-                <i class="fas fa-pen-fancy me-1"></i> Creator Studio
-            </span>
-            <h2 class="display-5 fw-bold text-white mb-2">Kelola Kampanye</h2>
-            <p class="text-white-50 m-0">
-                Pantau status persetujuan dan perkembangan donasi kampanye Anda di sini.
-            </p>
-        </div>
-        <div>
-            <a href="/kreator/create" class="btn btn-netflix fw-bold px-4 py-3 shadow-lg hover-scale rounded-pill">
-                <i class="fas fa-plus-circle me-2"></i> Buat Kampanye Baru
-            </a>
-        </div>
-    </div>
+    <!-- Content -->
+    <div class="container kreator-container">
 
-    <div class="row g-4">
-        {% for camp in campaigns %}
-        <div class="col-md-6 col-lg-4">
-            <div class="glass-panel h-100 d-flex flex-column rounded-3 overflow-hidden position-relative hover-lift shadow-lg border border-secondary border-opacity-25">
-                
-                <div class="position-absolute top-0 start-0 m-3 z-3">
-                    {% if camp.status == 'Active' %}
-                        <span class="badge bg-success shadow-sm px-3 py-2 rounded-pill">
-                            <i class="fas fa-check-circle me-1"></i> Live / Aktif
-                        </span>
-                    {% elif camp.status == 'Pending' %}
-                        <span class="badge bg-warning text-dark shadow-sm px-3 py-2 rounded-pill">
-                            <i class="fas fa-clock me-1"></i> Menunggu Admin
-                        </span>
-                    {% elif camp.status == 'Rejected' %}
-                        <span class="badge bg-danger shadow-sm px-3 py-2 rounded-pill">
-                            <i class="fas fa-times-circle me-1"></i> Ditolak
-                        </span>
-                    {% endif %}
-                </div>
-
-                <div class="position-relative" style="height: 220px; overflow: hidden;">
-                    {% if camp.image_filename %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ camp.image_filename) }}" 
-                             class="w-100 h-100 object-fit-cover transition-zoom" 
-                             alt="{{ camp.title }}">
-                    {% else %}
-                        <div class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center">
-                            <i class="fas fa-image fa-3x text-white-50"></i>
-                        </div>
-                    {% endif %}
-                    
-                    <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
-                        <div class="text-white small fw-bold text-uppercase ls-1">
-                            <i class="fas fa-tag me-1 text-info"></i> {{ camp.category }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4 flex-grow-1 d-flex flex-column">
-                    <h5 class="fw-bold text-white mb-2">{{ camp.title }}</h5>
-                    
-                    <div class="d-flex align-items-center mb-3 text-white-50 small">
-                        <i class="fas fa-map-marker-alt me-2 text-danger"></i> {{ camp.location }}
-                    </div>
-
-                    <div class="p-3 rounded bg-black bg-opacity-25 border border-secondary border-opacity-25 mb-4">
-                        <div class="d-flex justify-content-between text-white small mb-2">
-                            <span class="text-white-50">Target Donasi</span>
-                            <span class="fw-bold text-success">{{ camp.target_amount }} ETH</span>
-                        </div>
-                        <div class="d-flex justify-content-between text-white-50 small" style="font-size: 0.75rem;">
-                            <span>Batas Waktu</span>
-                            <span><i class="far fa-calendar-alt me-1"></i> {{ camp.deadline }}</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-auto d-grid gap-2">
-                        <div class="mt-auto d-grid gap-2">
-    {% if camp.status == 'Active' %}
-        <a href="{{ url_for('kreator_campaign_detail', campaign_id=camp.id) }}" class="btn btn-outline-light btn-sm">
-            <i class="fas fa-book-open me-2"></i> Lihat Buku Masuk
-        </a>
-    {% else %}
-        <button class="btn btn-outline-secondary btn-sm border-0" disabled>
-            <i class="fas fa-lock me-2"></i> Menunggu Persetujuan
-        </button>
-    {% endif %}
-</div>
-                </div>
-            </div>
-        </div>
-        {% else %}
-        <div class="col-12">
-            <div class="glass-panel text-center py-5 rounded border border-dashed border-secondary opacity-75">
-                <div class="mb-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-dark bg-opacity-50 rounded-circle" style="width: 100px; height: 100px;">
-                        <i class="fas fa-folder-open fa-3x text-white-50"></i>
-                    </div>
-                </div>
-                <h3 class="text-white fw-bold">Belum Ada Kampanye</h3>
-                <p class="text-white-50 mb-4 col-md-6 mx-auto">
-                    Mulai langkah kebaikan Anda sekarang dengan membuat kampanye pertama!
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5 border-bottom border-secondary border-opacity-50 pb-4">
+            <div class="mb-3 mb-md-0">
+                <span class="badge bg-info bg-opacity-75 mb-2 px-3 py-2 rounded-pill shadow-sm">
+                    <i class="fas fa-pen-fancy me-1"></i> Creator Studio
+                </span>
+                <h2 class="display-5 fw-bold text-white mb-2">Kelola Kampanye</h2>
+                <p class="text-white-50 m-0">
+                    Pantau status persetujuan dan perkembangan donasi kampanye Anda di sini.
                 </p>
-                <a href="/kreator/create" class="btn btn-netflix px-5 py-3 rounded-pill fw-bold shadow-lg">
-                    <i class="fas fa-plus me-2"></i> Mulai Sekarang
+            </div>
+            <div>
+                <a href="/kreator/create" class="btn btn-netflix fw-bold px-4 py-3 shadow-lg hover-scale rounded-pill">
+                    <i class="fas fa-plus-circle me-2"></i> Buat Kampanye Baru
                 </a>
             </div>
         </div>
-        {% endfor %}
-    </div>
 
+        <div class="row g-4">
+            {% for camp in campaigns %}
+            <div class="col-sm-12 col-md-6 col-lg-4 d-flex">
+                <div class="glass-panel h-100 w-100 d-flex flex-column rounded-3 overflow-hidden position-relative hover-lift shadow-lg border border-secondary border-opacity-25">
+
+                    <div class="position-absolute top-0 start-0 m-3 z-3">
+                        {% if camp.status == 'Active' %}
+                            <span class="badge bg-success shadow-sm px-3 py-2 rounded-pill">
+                                <i class="fas fa-check-circle me-1"></i> Live / Aktif
+                            </span>
+                        {% elif camp.status == 'Pending' %}
+                            <span class="badge bg-warning text-dark shadow-sm px-3 py-2 rounded-pill">
+                                <i class="fas fa-clock me-1"></i> Menunggu Admin
+                            </span>
+                        {% elif camp.status == 'Rejected' %}
+                            <span class="badge bg-danger shadow-sm px-3 py-2 rounded-pill">
+                                <i class="fas fa-times-circle me-1"></i> Ditolak
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="position-relative" style="height: 220px; overflow: hidden;">
+                        {% if camp.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ camp.image_filename) }}"
+                                 class="w-100 h-100 object-fit-cover transition-zoom"
+                                 alt="{{ camp.title }}">
+                        {% else %}
+                            <div class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center">
+                                <i class="fas fa-image fa-3x text-white-50"></i>
+                            </div>
+                        {% endif %}
+
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3"
+                             style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
+                            <div class="text-white small fw-bold text-uppercase ls-1">
+                                <i class="fas fa-tag me-1 text-info"></i> {{ camp.category }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 flex-grow-1 d-flex flex-column">
+                        <h5 class="fw-bold text-white mb-2">{{ camp.title }}</h5>
+
+                        <div class="d-flex align-items-center mb-3 text-white-50 small">
+                            <i class="fas fa-map-marker-alt me-2 text-danger"></i> {{ camp.location }}
+                        </div>
+
+                        <div class="p-3 rounded bg-black bg-opacity-25 border border-secondary border-opacity-25 mb-4">
+                            <div class="d-flex justify-content-between text-white small mb-2">
+                                <span class="text-white-50">Target Donasi</span>
+                                <span class="fw-bold text-success">{{ camp.target_amount }} ETH</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-white-50 small" style="font-size: 0.75rem;">
+                                <span>Batas Waktu</span>
+                                <span><i class="far fa-calendar-alt me-1"></i> {{ camp.deadline }}</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto d-grid gap-2">
+                            {% if camp.status == 'Active' %}
+                                <a href="{{ url_for('kreator_campaign_detail', campaign_id=camp.id) }}"
+                                   class="btn btn-outline-light btn-sm">
+                                    <i class="fas fa-book-open me-2"></i> Lihat Buku Masuk
+                                </a>
+                            {% else %}
+                                <button class="btn btn-outline-secondary btn-sm border-0" disabled>
+                                    <i class="fas fa-lock me-2"></i> Menunggu Persetujuan
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <div class="glass-panel text-center py-5 rounded border border-dashed border-secondary opacity-75">
+                    <h3 class="text-white fw-bold">Belum Ada Kampanye</h3>
+                    <p class="text-white-50 mb-4 col-md-6 mx-auto">
+                        Mulai langkah kebaikan Anda sekarang dengan membuat kampanye pertama!
+                    </p>
+                    <a href="/kreator/create" class="btn btn-netflix px-5 py-3 rounded-pill fw-bold shadow-lg">
+                        <i class="fas fa-plus me-2"></i> Mulai Sekarang
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
 </div>
 
 <style>
-    /* 1. LAYER PALING BELAKANG: GAMBAR PERPUSTAKAAN */
-    .page-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -2; /* Pastikan di belakang overlay dan konten */
-        
-        /* Gambar Perpustakaan Estetik */
-        background-image: url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=2070&auto=format&fit=crop'); 
-        
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed; /* Parallax effect agar tidak ikut scroll */
-    }
+.page-wrapper {
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
 
-    /* 2. LAYER TENGAH: OVERLAY GELAP (Supaya teks terbaca) */
-    .page-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1; /* Di atas gambar, di belakang konten */
-        background: linear-gradient(to bottom, rgba(10, 10, 10, 0.8), rgba(20, 20, 20, 0.95));
-        backdrop-filter: blur(3px); /* Sedikit blur pada gambar asli */
-    }
+.kreator-container {
+    position: relative;
+    z-index: 2;
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
 
-    /* 3. STYLE KARTU GLASSMORPHISM */
-    .glass-panel {
-        background: rgba(40, 40, 40, 0.5); /* Transparan */
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        transition: all 0.3s ease;
-    }
+/* Background */
+.page-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-image: url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+}
 
-    .hover-lift:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-        border-color: rgba(255, 255, 255, 0.2) !important;
-    }
+.page-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to bottom, rgba(10,10,10,.8), rgba(20,20,20,.95));
+}
 
-    .object-fit-cover {
-        object-fit: cover;
-    }
-    
-    .transition-zoom {
-        transition: transform 0.5s ease;
-    }
+/* Card */
+.glass-panel {
+    background: rgba(40,40,40,.5);
+    backdrop-filter: blur(12px);
+    transition: .3s;
+}
 
-    .hover-lift:hover .transition-zoom {
-        transform: scale(1.1);
-    }
+.hover-lift:hover {
+    transform: translateY(-8px);
+}
 
-    .ls-1 {
-        letter-spacing: 1px;
-    }
-    
-    .hover-scale {
-        transition: transform 0.2s;
-    }
-    
-    .hover-scale:hover {
-        transform: scale(1.05);
-    }
+.object-fit-cover { object-fit: cover; }
+.transition-zoom { transition: transform .5s; }
+.hover-lift:hover .transition-zoom { transform: scale(1.1); }
+.ls-1 { letter-spacing: 1px; }
+.hover-scale { transition: transform .2s; }
+.hover-scale:hover { transform: scale(1.05); }
 </style>
 
 {% endblock %}

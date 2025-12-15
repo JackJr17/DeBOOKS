@@ -366,8 +366,30 @@ def donatur_status():
 @role_required('kreator')
 def kreator_dashboard():
     db = get_db()
-    campaigns = db.execute("SELECT * FROM campaigns WHERE creator_id=?", (session['user_id'],)).fetchall()
-    return render_template('kreator_dashboard.html', campaigns=campaigns)
+
+    rows = db.execute(
+        "SELECT * FROM campaigns WHERE creator_id=?",
+        (session['user_id'],)
+    ).fetchall()
+
+    campaigns = []
+    for c in rows:
+        campaigns.append({
+            "id": c["id"],
+            "title": c["title"],
+            "category": c["category"] or "-",
+            "location": c["location"] or "-",
+            "image_filename": c["image_filename"],
+            "target_amount": c["target_amount"] or 0,
+            "deadline": c["deadline"] or "-",
+            "status": (c["status"] or "Pending").strip().capitalize()
+        })
+
+    return render_template(
+        'kreator_dashboard.html',
+        campaigns=campaigns
+    )
+
 
 @app.route('/kreator/create', methods=['GET', 'POST'])
 @login_required
